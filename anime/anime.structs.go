@@ -73,12 +73,17 @@ type Recommendation struct {
   Num   int   `json:"num_recommendations"`
 }
 
+type AltTitles struct {
+  Synonyms []string `json:"synonyms"`
+  En       string   `json:"en"`
+  Ja       string   `json:"ja"`
+}
+
 type Anime struct {
   Id                int              `json:"id"`
   Title             string           `json:"title"`
   MainPicture       AnimePicture     `json:"main_picture"`
-  // TODO: AltTitles should also have options for JP and EN Titles
-  AltTitles         []string         `json:"alternative_titles"`
+  AltTitles         AltTitles        `json:"alternative_titles"`
   StartDate         string           `json:"start_date"`
   EndDate           string           `json:"end_date"`
   Synopsis          string           `json:"synopsis"`
@@ -99,6 +104,7 @@ type Anime struct {
   Broadcast         Broadcast        `json:"broadcast"`
   Source            string           `json:"source"`
   DurationSeconds   int              `json:"average_episode_duration"`
+  // Rating as in R, PG13, etc
   Rating            string           `json:"rating"`
   Pictures          []AnimePicture   `json:"pictures"`
   Background        string           `json:"background"`
