@@ -4,29 +4,69 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 )
 
-// Each anime has its own ID on MAL
-func GetAnimeById(token string, animeId int) Anime {
-  endpoint := fmt.Sprintf("https://api.myanimelist.net/v2/anime/%d?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics", animeId)
+const BASE_URL string = "https://api.myanimelist.net/v2/anime"
 
+// Each anime has its own ID on MAL
+func GetAnimeById(token string, animeId int, fields []string) (Anime, error) {
   var anime Anime
+
+  // Check if given fields are valid
+  for _, j := range(fields) {
+    if !isValidField(j) {
+      return anime, errors.New(fmt.Sprintf("GetAnimeById: Invalid field specified: \"%s\"", j))
+    }
+  }
+
+  // default fields to use when none are specified
+  defaultFields := []string{
+    "id", "title", "main_picture", 
+    "alternative_titles", "start_date", 
+    "end_date", "synopsis", "mean", "rank", 
+    "popularity", "num_list_users", 
+    "num_scoring_users", "nsfw", "created_at", 
+    "updated_at", "media_type", "status", 
+    "genres", "my_list_status", "num_episodes", 
+    "start_season", "broadcast", "source", 
+    "average_episode_duration", "rating", 
+    "pictures", "background", "related_anime", 
+    "related_manga", "recommendations", 
+    "studios", "statistics",
+  }
+
+  if cap(fields) == 0 {
+    fields = defaultFields
+    log.Println("GetAnimeById: WARN: No fields specified, using all default fields to get data")
+  }
+
+  endpoint, _ := urlGenerator(
+    BASE_URL + "/" + strconv.Itoa(animeId),
+    []string{"fields"},
+    /* it seems to still return all fields from the API. 
+     * this might be an issue with MAL itself
+     * TODO: look into this */
+    [][]string{fields},
+    true,
+  )
+
   data := requestHandler(token, endpoint)
   json.Unmarshal([]byte(data), &anime)
 
-  return anime
+  return anime, nil
 }
 
 // Ranking is a list of anime sorted by their rank
 func GetAnimeRanking(token string, rankingType string, limit int) (AnimeRanking, error) {
   var animeRanking AnimeRanking
   if !isValidRankingType(rankingType) {
-    return animeRanking, errors.New(fmt.Sprintf("GetAnimeRanking: Invalid Ranking Type Given (\"%s\")", rankingType))
+    return animeRanking, errors.New(fmt.Sprintf("GetAnimeRanking: Invalid ranking type specified: \"%s\"", rankingType))
   }
 
   endpoint, _ := urlGenerator(
-    "https://api.myanimelist.net/v2/anime/ranking",
+    BASE_URL + "/ranking",
     []string{"ranking_type", "limit"},
     [][]string{{rankingType}, {strconv.Itoa(limit)}},
     true,

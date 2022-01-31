@@ -12,14 +12,13 @@ func isValidRankingType(rankingType string) bool {
       "movie",
       "special",
       "bypopularity",
-      "favorite":
-      return true
+      "favorite": return true
     }
   return false
 }
 
 // Checks if given rankingType is valid
-func areValidFields(field string) bool {
+func isValidField(field string) bool {
   switch field {
     case
       "id",
@@ -45,7 +44,7 @@ func areValidFields(field string) bool {
       "start_season",
       "broadcast",
       "source",
-      "avarage_episode_duration",
+      "average_episode_duration",
       "rating",
       "pictures",
       "background",
@@ -53,8 +52,7 @@ func areValidFields(field string) bool {
       "related_manga",
       "recommendations",
       "studios",
-      "statistics":
-      return true
+      "statistics": return true
     }
   return false
 }

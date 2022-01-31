@@ -36,7 +36,7 @@ func requestHandler(token string, endpoint string) string {
 }
 
 func urlGenerator(baseUrl string, names []string, values [][]string, isPrimary bool) (string, error) {
-  // TODO: error if cap(names) != cap(values)
+  // length of names and values should be same
   if cap(names) != cap(values) {
     return "", errors.New("urlGenerator: Error: Length of names and values don't match.")
   }
@@ -50,7 +50,7 @@ func urlGenerator(baseUrl string, names []string, values [][]string, isPrimary b
      * else it is &nextkey=value */
     if isPrimary {
       data = "?" + name + "="
-    } else { 
+    } else {
       data = "&" + name + "="
     }
 
