@@ -2,8 +2,9 @@ package anime
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-  "errors"
+	"strconv"
 )
 
 // Each anime has its own ID on MAL
@@ -18,13 +19,18 @@ func GetAnimeById(token string, animeId int) Anime {
 }
 
 // Ranking is a list of anime sorted by their rank
-func GetAnimeRanking(token string, rankingType string) (AnimeRanking, error) {
+func GetAnimeRanking(token string, rankingType string, limit int) (AnimeRanking, error) {
   var animeRanking AnimeRanking
   if !isValidRankingType(rankingType) {
     return animeRanking, errors.New(fmt.Sprintf("GetAnimeRanking: Invalid Ranking Type Given (\"%s\")", rankingType))
   }
 
-  endpoint := "https://api.myanimelist.net/v2/anime/ranking?ranking_type=all&limit=4"
+  endpoint, _ := urlGenerator(
+    "https://api.myanimelist.net/v2/anime/ranking",
+    []string{"ranking_type", "limit"},
+    [][]string{{rankingType}, {strconv.Itoa(limit)}},
+    true,
+  )
 
   // gets data from API and stores it in a struct
   var rankingData RawRanking

@@ -4,8 +4,11 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+  "errors"
 )
 
+// Handles HTTP request with your OAuth token as a Header
+// TODO: Verify that this function is safe to use
 func requestHandler(token string, endpoint string) string {
   client := &http.Client{}
 
@@ -30,4 +33,41 @@ func requestHandler(token string, endpoint string) string {
   }
 
   return string(body)
+}
+
+func urlGenerator(baseUrl string, names []string, values [][]string, isPrimary bool) (string, error) {
+  // TODO: error if cap(names) != cap(values)
+  if cap(names) != cap(values) {
+    return "", errors.New("urlGenerator: Error: Length of names and values don't match.")
+  }
+
+  var fields string
+
+  for index, name := range(names) {
+    var data string
+    /* if the data is the first field in URL, 
+     * it goes like ?key=value
+     * else it is &nextkey=value */
+    if isPrimary {
+      data = "?" + name + "="
+    } else { 
+      data = "&" + name + "="
+    }
+
+    // add values to data variable
+    for i, j := range values[index] {
+      if i > 0 {
+        data = data + "," + j
+      } else {
+        data = data + j 
+      }
+    }
+
+    fields = fields + data
+
+    // from now on all other fields will be secondary
+    isPrimary = false
+  }
+
+  return baseUrl + fields, nil
 }
