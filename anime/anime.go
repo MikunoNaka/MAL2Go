@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math"
 	"strconv"
 )
 
@@ -75,16 +76,25 @@ func GetAnimeById(token string, animeId int, fields []string) (Anime, error) {
 }
 
 // Ranking is a list of anime sorted by their rank
-func GetAnimeRanking(token string, rankingType string, limit int) (AnimeRanking, error) {
+func GetAnimeRanking(token string, rankingType string, limit int, offset int) (AnimeRanking, error) {
   var animeRanking AnimeRanking
+
+  // if limit exceeds what MAL supports
+  if limit > 500 {
+    return animeRanking, errors.New(fmt.Sprintf("GetAnimeRanking: Limit too high(%d). Max limit is 500", limit))
+  } else if offset > 499 {
+    return animeRanking, errors.New(fmt.Sprintf("GetAnimeRanking: Offset too high(%d). Max offset for mal2go is 499", offset))
+  }
+
+  // if ranking type is invalid
   if !isValidRankingType(rankingType) {
     return animeRanking, errors.New(fmt.Sprintf("GetAnimeRanking: Invalid ranking type specified: \"%s\"", rankingType))
   }
 
   endpoint, _ := urlGenerator(
     BASE_URL + "/ranking",
-    []string{"ranking_type", "limit"},
-    [][]string{{rankingType}, {strconv.Itoa(limit)}},
+    []string{"ranking_type", "limit", "offset"},
+    [][]string{{rankingType}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}},
     true,
   )
 
