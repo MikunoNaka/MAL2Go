@@ -61,6 +61,7 @@ type Anime struct {
   Id                int              `json:"id"`
   Title             string           `json:"title"`
   MainPicture       AnimePicture     `json:"main_picture"`
+  // TODO: AltTitles should also have options for JP and EN Titles
   AltTitles         []string         `json:"alternative_titles"`
   StartDate         string           `json:"start_date"`
   EndDate           string           `json:"end_date"`

@@ -3,37 +3,8 @@ package anime
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
   "errors"
 )
-
-func requestHandler(token string, endpoint string) string {
-  client := &http.Client{}
-
-  // generate request
-  req, err := http.NewRequest("GET", endpoint, nil)
-  if err != nil {
-      log.Fatal(err)
-  }
-  req.Header.Add("Authorization", token)
-
-  // do request
-  res, err := client.Do(req)
-  if err != nil {
-      log.Fatal(err)
-  }
-  defer res.Body.Close()
-
-  // read body
-  body, err := ioutil.ReadAll(res.Body)
-  if err != nil {
-      log.Fatal(err)
-  }
-
-  return string(body)
-}
 
 // Each anime has its own ID on MAL
 func GetAnimeById(token string, animeId int) Anime {
@@ -44,24 +15,6 @@ func GetAnimeById(token string, animeId int) Anime {
   json.Unmarshal([]byte(data), &anime)
 
   return anime
-}
-
-// Checks if given rankingType is valid
-func isValidRankingType(rankingType string) bool {
-    switch rankingType {
-    case
-        "all",
-        "airing",
-        "upcoming",
-        "tv",
-        "ova",
-        "movie",
-        "special",
-        "bypopularity",
-        "favorite":
-        return true
-    }
-    return false
 }
 
 // Ranking is a list of anime sorted by their rank
