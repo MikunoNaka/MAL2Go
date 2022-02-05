@@ -26,6 +26,45 @@ import (
 
 const BASE_URL string = "https://api.myanimelist.net/v2/anime"
 
+// in MAL documentation this is named Get Anime List
+// TODO: handle errors (if any)
+func SearchAnime(token, searchString string, limit, offset int) (AnimeSearch, error) {
+  var searchResults AnimeSearch
+
+  // if limit exceeds what MAL supports
+  if limit > 500 {
+    return searchResults, errors.New(fmt.Sprintf("SearchAnime: Limit too high(%d). Max limit is 500", limit))
+  } else if offset > 499 {
+    return searchResults, errors.New(fmt.Sprintf("SearchAnime: Offset too high(%d). Max offset for mal2go is 499", offset))
+  }
+
+  // generate endpoint url with custom params
+  endpoint, _ := urlGenerator(
+    BASE_URL,
+    []string{"q", "limit", "offset"},
+    [][]string{{searchString}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}},
+    true,
+  )
+
+  var animeSearchData AnimeSearchRaw
+  data := requestHandler(token, endpoint)
+  json.Unmarshal([]byte(data), &animeSearchData)
+
+  // Adding all the animes to another list to get formatted results later
+  var animes []Anime
+  for _, element := range animeSearchData.Data {
+    animes = append(animes, element.Anime)
+  }
+
+  // finally generate AnimeList 
+  searchResults = AnimeSearch {
+    Animes: animes,
+    Paging: animeSearchData.Paging,
+  }
+
+  return searchResults, nil
+}
+
 // Each anime has its own ID on MAL
 func GetAnimeById(token string, animeId int, fields []string) (Anime, error) {
   var anime Anime

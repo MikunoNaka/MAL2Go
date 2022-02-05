@@ -16,6 +16,13 @@
 
 package anime
 
+// contains previous/next page for anime list
+type ListPaging struct {
+  NextPage string `json:"next"`
+  PrevPage string `json:"previous"` // might need checking
+}
+
+/*
 // this is how the API returns data (looks horrible)
 type RawRanking struct {
   Data []struct {
@@ -39,3 +46,4 @@ type AnimeRanking struct {
   Titles []AnimeRankingTitle
   Paging ListPaging
 }
+*/

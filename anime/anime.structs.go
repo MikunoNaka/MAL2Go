@@ -92,7 +92,11 @@ type Anime struct {
   Popularity        int              `json:"popularity"`
   NumListUsers      int              `json:"num_list_users"`
   NumScoringUsers   int              `json:"num_scoring_users"`
-  NsfwStatus        string           `json:"nsfw"` // find out what values are there
+  /* NsfwStatus potential values:
+   *  white = sfw
+   *  gray  = probably nsfw
+   *  black = nsfw */
+  NsfwStatus        string           `json:"nsfw"`
   CreatedAt         string           `json:"created_at"`
   UpdatedAt         string           `json:"updated_at"`
   MediaType         string           `json:"media_type"`

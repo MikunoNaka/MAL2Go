@@ -17,25 +17,16 @@
 package anime
 
 // this is how the API returns data (looks horrible)
-type RawRanking struct {
+type AnimeSearchRaw struct {
   Data []struct {
     Anime Anime `json:"node"`
-    Ranking struct {
-      Rank int `json:"rank"`
-    } `json:"ranking"`
   } `json:"data"`
 
   Paging ListPaging `json:"paging"`
 }
 
-// each anime has a ranking number
-type AnimeRankingTitle struct {
-  Anime   Anime
-  RankNum int
-}
-
 // this is how mal2go returns data
-type AnimeRanking struct {
-  Titles []AnimeRankingTitle
+type AnimeSearch struct {
+  Animes []Anime
   Paging ListPaging
 }
