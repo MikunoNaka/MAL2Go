@@ -27,25 +27,30 @@ import (
 const BASE_URL string = "https://api.myanimelist.net/v2/anime"
 
 // in MAL documentation this is named Get Anime List
-// TODO: handle errors (if any)
-func SearchAnime(token, searchString string, limit, offset int) (AnimeSearch, error) {
+func SearchAnime(token, searchString string, limit, offset int, fields []string) (AnimeSearch, error) {
   var searchResults AnimeSearch
 
-  // if limit exceeds what MAL supports
-  if limit > 500 {
-    return searchResults, errors.New(fmt.Sprintf("SearchAnime: Limit too high(%d). Max limit is 500", limit))
-  } else if offset > 499 {
-    return searchResults, errors.New(fmt.Sprintf("SearchAnime: Offset too high(%d). Max offset for mal2go is 499", offset))
+  // error handling for limit and offset
+  limitsErr := limitsErrHandler(limit, offset)
+  if limitsErr != nil {
+    log.Println(limitsErr)
+  }
+
+  // handle all the errors for the fields
+  fields, err := fieldsErrHandler(fields)
+  if err != nil {
+    log.Println(err)
   }
 
   // generate endpoint url with custom params
   endpoint, _ := urlGenerator(
     BASE_URL,
-    []string{"q", "limit", "offset"},
-    [][]string{{searchString}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}},
+    []string{"q", "limit", "offset", "fields"},
+    [][]string{{searchString}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
     true,
   )
 
+  // gets data from API and stores it in a struct
   var animeSearchData AnimeSearchRaw
   data := requestHandler(token, endpoint)
   json.Unmarshal([]byte(data), &animeSearchData)
@@ -69,32 +74,10 @@ func SearchAnime(token, searchString string, limit, offset int) (AnimeSearch, er
 func GetAnimeById(token string, animeId int, fields []string) (Anime, error) {
   var anime Anime
 
-  // Check if given fields are valid
-  for _, j := range(fields) {
-    if !isValidField(j) {
-      return anime, errors.New(fmt.Sprintf("GetAnimeById: Invalid field specified: \"%s\"", j))
-    }
-  }
-
-  // default fields to use when none are specified
-  defaultFields := []string{
-    "id", "title", "main_picture", 
-    "alternative_titles", "start_date", 
-    "end_date", "synopsis", "mean", "rank", 
-    "popularity", "num_list_users", 
-    "num_scoring_users", "nsfw", "created_at", 
-    "updated_at", "media_type", "status", 
-    "genres", "my_list_status", "num_episodes", 
-    "start_season", "broadcast", "source", 
-    "average_episode_duration", "rating", 
-    "pictures", "background", "related_anime", 
-    "related_manga", "recommendations", 
-    "studios", "statistics",
-  }
-
-  if cap(fields) == 0 {
-    fields = defaultFields
-    log.Println("GetAnimeById: WARN: No fields specified, using all default fields to get data")
+  // handle all the errors for the fields
+  fields, err := fieldsErrHandler(fields)
+  if err != nil {
+    log.Println(err)
   }
 
   endpoint, _ := urlGenerator(
@@ -114,14 +97,19 @@ func GetAnimeById(token string, animeId int, fields []string) (Anime, error) {
 }
 
 // Ranking is a list of anime sorted by their rank
-func GetAnimeRanking(token string, rankingType string, limit int, offset int) (AnimeRanking, error) {
+func GetAnimeRanking(token string, rankingType string, limit, offset int, fields []string) (AnimeRanking, error) {
   var animeRanking AnimeRanking
 
-  // if limit exceeds what MAL supports
-  if limit > 500 {
-    return animeRanking, errors.New(fmt.Sprintf("GetAnimeRanking: Limit too high(%d). Max limit is 500", limit))
-  } else if offset > 499 {
-    return animeRanking, errors.New(fmt.Sprintf("GetAnimeRanking: Offset too high(%d). Max offset for mal2go is 499", offset))
+  // error handling for limit and offset
+  limitsErr := limitsErrHandler(limit, offset)
+  if limitsErr != nil {
+    log.Println(limitsErr)
+  }
+
+  // handle all the errors for the fields
+  fields, err := fieldsErrHandler(fields)
+  if err != nil {
+    log.Println(err)
   }
 
   // if ranking type is invalid
@@ -131,8 +119,8 @@ func GetAnimeRanking(token string, rankingType string, limit int, offset int) (A
 
   endpoint, _ := urlGenerator(
     BASE_URL + "/ranking",
-    []string{"ranking_type", "limit", "offset"},
-    [][]string{{rankingType}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}},
+    []string{"ranking_type", "limit", "offset", "fields"},
+    [][]string{{rankingType}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
     true,
   )
 
@@ -163,4 +151,58 @@ func GetAnimeRanking(token string, rankingType string, limit int, offset int) (A
   }
 
   return animeRanking, nil
+}
+
+// get list of animes from specified season
+func GetSeasonalAnime(token, year, season, sort string, limit, offset int, fields []string) (SeasonalAnime, error) {
+  var seasonalAnime SeasonalAnime
+
+  // error handling for limit and offset
+  limitsErr := limitsErrHandler(limit, offset)
+  if limitsErr != nil {
+    log.Println(limitsErr)
+  }
+
+  // handle all the errors for the fields
+  fields, err := fieldsErrHandler(fields)
+  if err != nil {
+    log.Println(err)
+  }
+
+  // checks if valid season is specified
+  if !isValidSeason(season) {
+    return seasonalAnime, errors.New(fmt.Sprintf("GetSeasonalAnime: Invalid season specified: \"%s\"", season))
+  }
+
+  // checks if valid sort is specified
+  if !isValidSort(sort) {
+    return seasonalAnime, errors.New(fmt.Sprintf("GetSeasonalAnime: Invalid sort specified: \"%s\"", sort))
+  }
+
+  endpoint, _ := urlGenerator(
+    BASE_URL + fmt.Sprintf("/season/%s/%s", year, season),
+    []string{"sort", "limit", "offset", "fields"},
+    [][]string{{sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+    true,
+  )
+
+  // gets data from API and stores it in a struct
+  var seasonalAnimeData SeasonalAnimeRaw
+  data := requestHandler(token, endpoint)
+  json.Unmarshal([]byte(data), &seasonalAnimeData)
+
+  // Adding all the animes to another list to get formatted results later
+  var animes []Anime
+  for _, element := range seasonalAnimeData.Data {
+    animes = append(animes, element.Anime)
+  }
+
+  // finally generate SeasonalAnime
+  seasonalAnime = SeasonalAnime {
+    Animes: animes,
+    Paging: seasonalAnimeData.Paging,
+    Season: seasonalAnimeData.Season,
+  }
+
+  return seasonalAnime, nil
 }

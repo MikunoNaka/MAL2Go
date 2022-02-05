@@ -73,3 +73,24 @@ func isValidField(field string) bool {
   return false
 }
 
+// Checks if given season is valid
+func isValidSeason(season string) bool {
+  switch season {
+    case
+      "winter",
+      "spring",
+      "summer",
+      "fall": return true
+    }
+  return false
+}
+
+// Checks if given sort is valid
+func isValidSort(sort string) bool {
+  switch sort {
+    case
+      "anime_score",
+      "anime_num_list_users": return true
+    }
+  return false
+}

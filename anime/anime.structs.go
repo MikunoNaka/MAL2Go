@@ -47,11 +47,6 @@ type ListStatus struct {
   UpdatedAt    string `json:"updated_at"`
 }
 
-type Season struct {
-  Year int    `json:"year"`
-  Name string `json:"season"`
-}
-
 type Broadcast struct {
   Day  string `json:"day_of_the_week"`
   Time string `json:"start_time"`
