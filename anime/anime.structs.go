@@ -22,11 +22,11 @@ type AnimePicture struct {
 }
 
 type StatusStatistics struct {
-  Watching    int `json:"watching"` 
-  Completed   int `json:"completed"`
-  OnHold      int `json:"on_hold"`
-  Dropped     int `json:"dropped"`
-  PlanToWatch int `json:"plan_to_watch"`
+  Watching    string `json:"watching"` 
+  Completed   string `json:"completed"`
+  OnHold      string `json:"on_hold"`
+  Dropped     string `json:"dropped"`
+  PlanToWatch string `json:"plan_to_watch"`
 }
 
 type AnimeStatistics struct {
