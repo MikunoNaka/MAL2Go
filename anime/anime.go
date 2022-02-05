@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"strconv"
 )
 
@@ -33,13 +32,13 @@ func SearchAnime(token, searchString string, limit, offset int, fields []string)
   // error handling for limit and offset
   limitsErr := limitsErrHandler(limit, offset)
   if limitsErr != nil {
-    log.Println(limitsErr)
+    return searchResults, limitsErr
   }
 
   // handle all the errors for the fields
   fields, err := fieldsErrHandler(fields)
   if err != nil {
-    log.Println(err)
+    return searchResults, err
   }
 
   // generate endpoint url with custom params
@@ -77,7 +76,7 @@ func GetAnimeById(token string, animeId int, fields []string) (Anime, error) {
   // handle all the errors for the fields
   fields, err := fieldsErrHandler(fields)
   if err != nil {
-    log.Println(err)
+    return anime, err
   }
 
   endpoint, _ := urlGenerator(
@@ -103,13 +102,13 @@ func GetAnimeRanking(token string, rankingType string, limit, offset int, fields
   // error handling for limit and offset
   limitsErr := limitsErrHandler(limit, offset)
   if limitsErr != nil {
-    log.Println(limitsErr)
+    return animeRanking, limitsErr
   }
 
   // handle all the errors for the fields
   fields, err := fieldsErrHandler(fields)
   if err != nil {
-    log.Println(err)
+    return animeRanking, err
   }
 
   // if ranking type is invalid
@@ -160,13 +159,13 @@ func GetSeasonalAnime(token, year, season, sort string, limit, offset int, field
   // error handling for limit and offset
   limitsErr := limitsErrHandler(limit, offset)
   if limitsErr != nil {
-    log.Println(limitsErr)
+    return seasonalAnime, limitsErr
   }
 
   // handle all the errors for the fields
   fields, err := fieldsErrHandler(fields)
   if err != nil {
-    log.Println(err)
+    return seasonalAnime, err
   }
 
   // checks if valid season is specified
@@ -205,4 +204,47 @@ func GetSeasonalAnime(token, year, season, sort string, limit, offset int, field
   }
 
   return seasonalAnime, nil
+}
+
+// get anime suggestions for the user
+func GetSuggestedAnime(token string, limit, offset int, fields []string) (SuggestedAnime, error){
+  var suggestedAnime SuggestedAnime
+
+  // error handling for limit and offset
+  limitsErr := limitsErrHandler(limit, offset)
+  if limitsErr != nil {
+    return suggestedAnime, limitsErr
+  }
+
+  // handle all the errors for the fields
+  fields, err := fieldsErrHandler(fields)
+  if err != nil {
+    return suggestedAnime, err
+  }
+
+  endpoint, _ := urlGenerator(
+    BASE_URL + "/suggestions",
+    []string{"limit", "offset", "fields"},
+    [][]string{{strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+    true,
+  )
+
+  // gets data from API and stores it in a struct
+  var suggestedAnimeData SuggestedAnimeRaw
+  data := requestHandler(token, endpoint)
+  json.Unmarshal([]byte(data), &suggestedAnimeData)
+
+  // Adding all the animes to another list to get formatted results later
+  var animes []Anime
+  for _, element := range suggestedAnimeData.Data {
+    animes = append(animes, element.Anime)
+  }
+
+  // finally generate RecommendedAnime struct
+  suggestedAnime = SuggestedAnime {
+    Animes: animes,
+    Paging: suggestedAnimeData.Paging,
+  }
+
+  return suggestedAnime, nil
 }
