@@ -25,18 +25,16 @@ import (
 
 // Handles HTTP request with your OAuth token as a Header
 // TODO: Verify that this function is safe to use
-func requestHandler(token string, endpoint string) string {
-  client := &http.Client{}
-
+func (c AnimeClient) requestHandler(endpoint string) string {
   // generate request
   req, err := http.NewRequest("GET", endpoint, nil)
   if err != nil {
       log.Fatal(err)
   }
-  req.Header.Add("Authorization", token)
+  req.Header.Add("Authorization", c.AuthToken)
 
   // do request
-  res, err := client.Do(req)
+  res, err := c.HttpClient.Do(req)
   if err != nil {
       log.Fatal(err)
   }

@@ -51,7 +51,7 @@ func (c AnimeClient) SearchAnime(searchString string, limit, offset int, fields 
 
   // gets data from API and stores it in a struct
   var animeSearchData AnimeSearchRaw
-  data := requestHandler(c.AuthToken, endpoint)
+  data := c.requestHandler(endpoint)
   json.Unmarshal([]byte(data), &animeSearchData)
 
   // Adding all the animes to another list to get formatted results later
@@ -89,7 +89,7 @@ func (c AnimeClient) GetAnimeById(animeId int, fields []string) (Anime, error) {
     true,
   )
 
-  data := requestHandler(c.AuthToken, endpoint)
+  data := c.requestHandler(endpoint)
   json.Unmarshal([]byte(data), &anime)
 
   return anime, nil
@@ -125,7 +125,7 @@ func (c AnimeClient) GetAnimeRanking(rankingType string, limit, offset int, fiel
 
   // gets data from API and stores it in a struct
   var rankingData RawRanking
-  data := requestHandler(c.AuthToken, endpoint)
+  data := c.requestHandler(endpoint)
   json.Unmarshal([]byte(data), &rankingData)
 
   // Adding all the animes in ranking list to a slice
@@ -187,7 +187,7 @@ func (c AnimeClient) GetSeasonalAnime(year, season, sort string, limit, offset i
 
   // gets data from API and stores it in a struct
   var seasonalAnimeData SeasonalAnimeRaw
-  data := requestHandler(c.AuthToken, endpoint)
+  data := c.requestHandler(endpoint)
   json.Unmarshal([]byte(data), &seasonalAnimeData)
 
   // Adding all the animes to another list to get formatted results later
@@ -231,7 +231,7 @@ func (c AnimeClient) GetSuggestedAnime(limit, offset int, fields []string) (Sugg
 
   // gets data from API and stores it in a struct
   var suggestedAnimeData SuggestedAnimeRaw
-  data := requestHandler(c.AuthToken, endpoint)
+  data := c.requestHandler(endpoint)
   json.Unmarshal([]byte(data), &suggestedAnimeData)
 
   // Adding all the animes to another list to get formatted results later

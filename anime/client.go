@@ -16,7 +16,12 @@
 
 package anime
 
+import (
+  "net/http"
+)
+
 // MyAnimeList Client for mal2go/anime package
 type AnimeClient struct {
   AuthToken, RefreshToken string
+  HttpClient http.Client
 }
