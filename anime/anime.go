@@ -26,7 +26,7 @@ import (
 const BASE_URL string = "https://api.myanimelist.net/v2/anime"
 
 // in MAL documentation this is named Get Anime List
-func SearchAnime(token, searchString string, limit, offset int, fields []string) (AnimeSearch, error) {
+func (c AnimeClient) SearchAnime(searchString string, limit, offset int, fields []string) (AnimeSearch, error) {
   var searchResults AnimeSearch
 
   // error handling for limit and offset
@@ -51,14 +51,14 @@ func SearchAnime(token, searchString string, limit, offset int, fields []string)
 
   // gets data from API and stores it in a struct
   var animeSearchData AnimeSearchRaw
-  data := requestHandler(token, endpoint)
+  data := requestHandler(c.AuthToken, endpoint)
   json.Unmarshal([]byte(data), &animeSearchData)
 
   // Adding all the animes to another list to get formatted results later
   var animes []Anime
-  for _, element := range animeSearchData.Data {
-    animes = append(animes, element.Anime)
-  }
+  for _, element := range animeSearchData.Data { 
+    animes = append(animes, element.Anime) 
+  } 
 
   // finally generate AnimeList 
   searchResults = AnimeSearch {
@@ -70,7 +70,7 @@ func SearchAnime(token, searchString string, limit, offset int, fields []string)
 }
 
 // Each anime has its own ID on MAL
-func GetAnimeById(token string, animeId int, fields []string) (Anime, error) {
+func (c AnimeClient) GetAnimeById(animeId int, fields []string) (Anime, error) {
   var anime Anime
 
   // handle all the errors for the fields
@@ -89,14 +89,14 @@ func GetAnimeById(token string, animeId int, fields []string) (Anime, error) {
     true,
   )
 
-  data := requestHandler(token, endpoint)
+  data := requestHandler(c.AuthToken, endpoint)
   json.Unmarshal([]byte(data), &anime)
 
   return anime, nil
 }
 
 // Ranking is a list of anime sorted by their rank
-func GetAnimeRanking(token string, rankingType string, limit, offset int, fields []string) (AnimeRanking, error) {
+func (c AnimeClient) GetAnimeRanking(rankingType string, limit, offset int, fields []string) (AnimeRanking, error) {
   var animeRanking AnimeRanking
 
   // error handling for limit and offset
@@ -125,7 +125,7 @@ func GetAnimeRanking(token string, rankingType string, limit, offset int, fields
 
   // gets data from API and stores it in a struct
   var rankingData RawRanking
-  data := requestHandler(token, endpoint)
+  data := requestHandler(c.AuthToken, endpoint)
   json.Unmarshal([]byte(data), &rankingData)
 
   // Adding all the animes in ranking list to a slice
@@ -153,7 +153,7 @@ func GetAnimeRanking(token string, rankingType string, limit, offset int, fields
 }
 
 // get list of animes from specified season
-func GetSeasonalAnime(token, year, season, sort string, limit, offset int, fields []string) (SeasonalAnime, error) {
+func (c AnimeClient) GetSeasonalAnime(year, season, sort string, limit, offset int, fields []string) (SeasonalAnime, error) {
   var seasonalAnime SeasonalAnime
 
   // error handling for limit and offset
@@ -187,7 +187,7 @@ func GetSeasonalAnime(token, year, season, sort string, limit, offset int, field
 
   // gets data from API and stores it in a struct
   var seasonalAnimeData SeasonalAnimeRaw
-  data := requestHandler(token, endpoint)
+  data := requestHandler(c.AuthToken, endpoint)
   json.Unmarshal([]byte(data), &seasonalAnimeData)
 
   // Adding all the animes to another list to get formatted results later
@@ -207,7 +207,7 @@ func GetSeasonalAnime(token, year, season, sort string, limit, offset int, field
 }
 
 // get anime suggestions for the user
-func GetSuggestedAnime(token string, limit, offset int, fields []string) (SuggestedAnime, error){
+func (c AnimeClient) GetSuggestedAnime(limit, offset int, fields []string) (SuggestedAnime, error){
   var suggestedAnime SuggestedAnime
 
   // error handling for limit and offset
@@ -231,7 +231,7 @@ func GetSuggestedAnime(token string, limit, offset int, fields []string) (Sugges
 
   // gets data from API and stores it in a struct
   var suggestedAnimeData SuggestedAnimeRaw
-  data := requestHandler(token, endpoint)
+  data := requestHandler(c.AuthToken, endpoint)
   json.Unmarshal([]byte(data), &suggestedAnimeData)
 
   // Adding all the animes to another list to get formatted results later
