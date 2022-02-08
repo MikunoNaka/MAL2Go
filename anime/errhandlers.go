@@ -21,30 +21,11 @@ import (
   "fmt"
 )
 
-/* NOTE: MAL still seems to send some fields 
- * even if they aren't requested.
- * those include Title, Picture, Id, etc */
-// default fields to use when none are specified
-var defaultFields []string = []string{
-  "id", "title", "main_picture",
-  "alternative_titles", "start_date",
-  "end_date", "synopsis", "mean", "rank",
-  "popularity", "num_list_users",
-  "num_scoring_users", "nsfw", "created_at",
-  "updated_at", "media_type", "status",
-  "genres", "my_list_status", "num_episodes",
-  "start_season", "broadcast", "source",
-  "average_episode_duration", "rating",
-  "pictures", "background", "related_anime",
-  "related_manga", "recommendations",
-  "studios", "statistics",
-}
-
 // if fields aren't specified
 func fieldsErrHandler(fields []string) ([]string, error) {
   if cap(fields) == 0 {
     // uses all the default fields if none specified
-    return defaultFields, nil
+    return DefaultFields, nil
   }
 
   // checks if each given field is valid

@@ -17,16 +17,43 @@
 package anime
 
 import (
-  "fmt"
+	"encoding/json"
+	"fmt"
+  "github.com/MikunoNaka/mal2go/anime"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2"
 
 // Get authenticated user's anime list
-func (c AnimeListClient) GetAnimeList() {
-  endpoint := BASE_URL + "/users/@me/animelist?fields=list_status&limit=4"
+func (c AnimeListClient) GetAnimeList(user, status, sort string/*, limit, offset int*/) {
+  // get own list if user not specified
+  if user == "" {
+    user = "@me"
+  }
 
+  var userAnimeList anime.AnimeList
+  endpoint := BASE_URL + "/users/0ZeroTsu/animelist?fields=list_status&limit=4"
+
+  // get data from API
+  var animeListData AnimeListRaw
   data := c.requestHandler(endpoint, "GET")
-  fmt.Println(data)
+  json.Unmarshal([]byte(data), &animeListData)
+
+  // set MyListStatus for each element and add it to array
+  var animes []anime.Anime
+  for _, element := range animeListData.Data {
+    a := element.Anime
+    a.MyListStatus = element.ListStatus
+
+    animes = append(animes, a)
+  }
+
+  // finally create AnimeList
+  userAnimeList = anime.AnimeList {
+    Animes: animes,
+    Paging: animeListData.Paging,
+  }
+
+  fmt.Println(userAnimeList)
 }
 
