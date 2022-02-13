@@ -36,6 +36,11 @@ func (c AnimeListClient)DeleteAnime(id int) string {
   return c.requestHandler(endpoint, "DELETE")
 }
 
+// Update/Add an anime to user's anime list
+// func UpdateAnime(id int) {
+
+// }
+
 // Get authenticated user's anime list
 func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset int) (a.AnimeList, error){
   var userAnimeList a.AnimeList
@@ -51,7 +56,7 @@ func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset i
   }
 
   // checks if valid status is specified
-  if !e.IsValidListStatus(status) {
+  if status != "" && !e.IsValidListStatus(status) {
     return userAnimeList, errors.New(fmt.Sprintf("GetAnimeList: Invalid status specified: \"%s\"", status))
   }
 
@@ -60,7 +65,13 @@ func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset i
     user = "@me"
   }
 
-  endpoint := BASE_URL + "/users/" + user + "/animelist?status=" + status + "&sort=" + sort + "&limit=" + strconv.Itoa(limit) + "&offset=" + strconv.Itoa(offset)
+  // if status is "" it returns all anime
+  var endpoint string
+  if status == "" {
+    endpoint = BASE_URL + "/users/" + user + "/animelist?sort=" + sort + "&limit=" + strconv.Itoa(limit) + "&offset=" + strconv.Itoa(offset)
+  } else {
+    endpoint = BASE_URL + "/users/" + user + "/animelist?status=" + status + "&sort=" + sort + "&limit=" + strconv.Itoa(limit) + "&offset=" + strconv.Itoa(offset)
+  }
 
   // get data from API
   var animeListData AnimeListRaw
