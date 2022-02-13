@@ -37,9 +37,19 @@ func (c AnimeListClient)DeleteAnime(id int) string {
 }
 
 // Update/Add an anime to user's anime list
-// func UpdateAnime(id int) {
+func (c AnimeListClient)UpdateAnime(id int, data UpdateAnimeData) string {
+  endpoint := fmt.Sprintf("%s/anime/%d/my_list_status", BASE_URL, id)
 
-// }
+  // turn data struct into json
+  pepe, err := json.Marshal(data)
+  if err != nil {
+    fmt.Println(err)
+  }
+
+  // finally make API request
+  res := c.putRequestHandler(endpoint, pepe)
+  return res
+}
 
 // Get authenticated user's anime list
 func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset int) (a.AnimeList, error){

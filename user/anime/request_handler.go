@@ -21,6 +21,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+  "bytes"
 )
 
 // Handles HTTP request with your OAuth token as a Header
@@ -48,6 +49,31 @@ func (c AnimeListClient) requestHandler(endpoint, method string) string {
   // for DeleteAnime, its endpoint returns null data
   if method == "DELETE" {
     return strconv.Itoa(res.StatusCode)
+  }
+
+  return string(body)
+}
+
+// for PUT requests (used by UpdateAnime)
+func (c AnimeListClient) putRequestHandler(endpoint string, data []uint8) string {
+  // generate request
+  req, err := http.NewRequest(http.MethodPut, endpoint, bytes.NewBuffer(data))
+  if err != nil {
+      log.Fatal(err)
+  }
+  req.Header.Add("Authorization", c.AuthToken)
+
+  // do request
+  res, err := c.HttpClient.Do(req)
+  if err != nil {
+      log.Fatal(err)
+  }
+  defer res.Body.Close()
+
+  // read body
+  body, err := ioutil.ReadAll(res.Body)
+  if err != nil {
+      log.Fatal(err)
   }
 
   return string(body)

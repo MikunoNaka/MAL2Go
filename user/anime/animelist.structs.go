@@ -27,3 +27,16 @@ type AnimeListRaw struct {
   }  `json:"data"`
   Paging anime.ListPaging `json:"paging"`
 }
+
+type UpdateAnimeData struct {
+  Status         string `json:"status"`
+  IsRewatching   bool   `json:"is_rewatching"`
+  Score          int    `json:"score"`
+  EpWatched      int    `json:"num_watched_episodes"`
+  Priority       int    `json:"priority"`
+  TimesRewatched int    `json:"num_times_rewatched"`
+  // NOTE: idk what RewatchValue is
+  RewatchValue   int    `json:"rewatch_value"`
+  Tags           string `json:"tags"`
+  Comments       string `json:"comments"`
+}
