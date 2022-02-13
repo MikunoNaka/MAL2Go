@@ -27,12 +27,15 @@ import (
 
 const BASE_URL string = "https://api.myanimelist.net/v2/anime"
 
+// MAL Might change this
+const maxAnimeLimit int = 500
+
 // in MAL documentation this is named Get Anime List
 func (c AnimeClient) SearchAnime(searchString string, limit, offset int, fields []string) (AnimeSearch, error) {
   var searchResults AnimeSearch
 
   // error handling for limit and offset
-  limitsErr := e.LimitsErrHandler(limit, offset)
+  limitsErr := e.LimitsErrHandler(limit, offset, maxAnimeLimit)
   if limitsErr != nil {
     return searchResults, limitsErr
   }
@@ -102,7 +105,7 @@ func (c AnimeClient) GetAnimeRanking(rankingType string, limit, offset int, fiel
   var animeRanking AnimeRanking
 
   // error handling for limit and offset
-  limitsErr := e.LimitsErrHandler(limit, offset)
+  limitsErr := e.LimitsErrHandler(limit, offset, maxAnimeLimit)
   if limitsErr != nil {
     return animeRanking, limitsErr
   }
@@ -159,7 +162,7 @@ func (c AnimeClient) GetSeasonalAnime(year, season, sort string, limit, offset i
   var seasonalAnime SeasonalAnime
 
   // error handling for limit and offset
-  limitsErr := e.LimitsErrHandler(limit, offset)
+  limitsErr := e.LimitsErrHandler(limit, offset, maxAnimeLimit)
   if limitsErr != nil {
     return seasonalAnime, limitsErr
   }
@@ -176,7 +179,7 @@ func (c AnimeClient) GetSeasonalAnime(year, season, sort string, limit, offset i
   }
 
   // checks if valid sort is specified
-  if !e.IsValidSort(sort) {
+  if !e.IsValidSeasonalSort(sort) {
     return seasonalAnime, errors.New(fmt.Sprintf("GetSeasonalAnime: Invalid sort specified: \"%s\"", sort))
   }
 
@@ -213,7 +216,7 @@ func (c AnimeClient) GetSuggestedAnime(limit, offset int, fields []string) (Sugg
   var suggestedAnime SuggestedAnime
 
   // error handling for limit and offset
-  limitsErr := e.LimitsErrHandler(limit, offset)
+  limitsErr := e.LimitsErrHandler(limit, offset, maxAnimeLimit)
   if limitsErr != nil {
     return suggestedAnime, limitsErr
   }

@@ -86,11 +86,39 @@ func IsValidSeason(season string) bool {
 }
 
 // Checks if given sort is valid
-func IsValidSort(sort string) bool {
+// For seasonal anime lists
+func IsValidSeasonalSort(sort string) bool {
   switch sort {
     case
       "anime_score",
       "anime_num_list_users": return true
+    }
+  return false
+}
+
+// Checks if given sort is valid
+// for user anime lists
+func IsValidListSort(sort string) bool {
+  switch sort {
+    case
+      "list_score",
+      "list_updated_at",
+      "anime_title",
+      "anime_start_date",
+      "anime_id": return true
+    }
+  return false
+}
+
+// Checks if given anime list status is valid
+func IsValidListStatus(status string) bool {
+  switch status {
+    case
+      "watching",
+      "completed",
+      "on_hold",
+      "dropped",
+      "plan_to_watch": return true
     }
   return false
 }

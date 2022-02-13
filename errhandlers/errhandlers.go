@@ -41,10 +41,10 @@ func FieldsErrHandler(fields []string) ([]string, error) {
 }
 
 // if limit or error specified are above the limit
-func LimitsErrHandler(limit, offset int) error {
-  maxOffset := 500 - limit
-  if limit > 500 {
-    return errors.New(fmt.Sprintf("InvalidLimitError: Limit specified too high (%d > 500).", limit))
+func LimitsErrHandler(limit, offset, maxLimit int) error {
+  maxOffset := maxLimit - limit
+  if limit > maxLimit {
+    return errors.New(fmt.Sprintf("InvalidLimitError: Limit specified too high (%d > %d).", limit, maxLimit))
   } else if offset > maxOffset {
     return errors.New(fmt.Sprintf("InvalidOffsetError: Offset specified too high (%d > %d).", offset, maxOffset))
   }

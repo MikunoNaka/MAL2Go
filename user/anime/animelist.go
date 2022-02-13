@@ -18,18 +18,22 @@ package anime
 
 import (
 	"encoding/json"
-	"fmt"
-  "github.com/MikunoNaka/mal2go/anime"
+  "strconv"
+  "fmt"
+  "errors"
+  a "github.com/MikunoNaka/mal2go/anime"
   e "github.com/MikunoNaka/mal2go/errhandlers"
+  u "github.com/MikunoNaka/mal2go/util"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2"
+const maxListLimit int = 1000
 
 // Get authenticated user's anime list
-func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset int, fields []string) (anime.AnimeList, error){
-  var userAnimeList anime.AnimeList
+func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset int, fields []string) (a.AnimeList, error){
+  var userAnimeList a.AnimeList
   // error handling for limit and offset
-  limitsErr := e.LimitsErrHandler(limit, offset)
+  limitsErr := e.LimitsErrHandler(limit, offset, maxListLimit)
   if limitsErr != nil {
     return userAnimeList, limitsErr
   }
@@ -40,12 +44,27 @@ func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset i
     return userAnimeList, err
   }
 
+  // checks if valid sort is specified
+  if !e.IsValidListSort(sort) {
+    return userAnimeList, errors.New(fmt.Sprintf("GetAnimeList: Invalid sort specified: \"%s\"", sort))
+  }
+
+  // checks if valid status is specified
+  if !e.IsValidListStatus(status) {
+    return userAnimeList, errors.New(fmt.Sprintf("GetAnimeList: Invalid status specified: \"%s\"", status))
+  }
+
   // get own list if user not specified
   if user == "" {
     user = "@me"
   }
 
-  endpoint := BASE_URL + "/users/0ZeroTsu/animelist?fields=list_status&limit=4"
+  endpoint, _ := u.UrlGenerator(
+    BASE_URL + "/users/" + user + "/animelist",
+    []string{"status", "sort", "limit", "offset", "fields"},
+    [][]string{{status}, {sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+    true,
+  )
 
   // get data from API
   var animeListData AnimeListRaw
@@ -53,7 +72,7 @@ func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset i
   json.Unmarshal([]byte(data), &animeListData)
 
   // set MyListStatus for each element and add it to array
-  var animes []anime.Anime
+  var animes []a.Anime
   for _, element := range animeListData.Data {
     a := element.Anime
     a.MyListStatus = element.ListStatus
@@ -62,7 +81,7 @@ func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset i
   }
 
   // finally create AnimeList
-  userAnimeList = anime.AnimeList {
+  userAnimeList = a.AnimeList {
     Animes: animes,
     Paging: animeListData.Paging,
   }
