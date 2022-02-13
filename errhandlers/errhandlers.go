@@ -14,42 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-package anime
+package errhandlers
 
 import (
   "errors"
   "fmt"
+  "github.com/MikunoNaka/mal2go/util"
 )
 
-/* NOTE: MAL still seems to send some fields 
- * even if they aren't requested.
- * those include Title, Picture, Id, etc */
-// default fields to use when none are specified
-var defaultFields []string = []string{
-  "id", "title", "main_picture",
-  "alternative_titles", "start_date",
-  "end_date", "synopsis", "mean", "rank",
-  "popularity", "num_list_users",
-  "num_scoring_users", "nsfw", "created_at",
-  "updated_at", "media_type", "status",
-  "genres", "my_list_status", "num_episodes",
-  "start_season", "broadcast", "source",
-  "average_episode_duration", "rating",
-  "pictures", "background", "related_anime",
-  "related_manga", "recommendations",
-  "studios", "statistics",
-}
-
 // if fields aren't specified
-func fieldsErrHandler(fields []string) ([]string, error) {
+func FieldsErrHandler(fields []string) ([]string, error) {
   if cap(fields) == 0 {
     // uses all the default fields if none specified
-    return defaultFields, nil
+    return util.DefaultFields, nil
   }
 
   // checks if each given field is valid
   for _, j := range(fields) {
-    if !isValidField(j) {
+    if !IsValidField(j) {
       return []string{}, errors.New(fmt.Sprintf("InvalidFieldError: Invalid field specified: \"%s\"", j))
     }
   }
@@ -59,10 +41,10 @@ func fieldsErrHandler(fields []string) ([]string, error) {
 }
 
 // if limit or error specified are above the limit
-func limitsErrHandler(limit, offset int) error {
-  maxOffset := 500 - limit
-  if limit > 500 {
-    return errors.New(fmt.Sprintf("InvalidLimitError: Limit specified too high (%d > 500).", limit))
+func LimitsErrHandler(limit, offset, maxLimit int) error {
+  maxOffset := maxLimit - limit
+  if limit > maxLimit {
+    return errors.New(fmt.Sprintf("InvalidLimitError: Limit specified too high (%d > %d).", limit, maxLimit))
   } else if offset > maxOffset {
     return errors.New(fmt.Sprintf("InvalidOffsetError: Offset specified too high (%d > %d).", offset, maxOffset))
   }

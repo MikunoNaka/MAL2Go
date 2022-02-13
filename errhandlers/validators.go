@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-package anime
+package errhandlers
 
 // Checks if given rankingType is valid
-func isValidRankingType(rankingType string) bool {
+func IsValidRankingType(rankingType string) bool {
   switch rankingType {
     case
       "all",
@@ -34,7 +34,7 @@ func isValidRankingType(rankingType string) bool {
 }
 
 // Checks if given rankingType is valid
-func isValidField(field string) bool {
+func IsValidField(field string) bool {
   switch field {
     case
       "id",
@@ -74,7 +74,7 @@ func isValidField(field string) bool {
 }
 
 // Checks if given season is valid
-func isValidSeason(season string) bool {
+func IsValidSeason(season string) bool {
   switch season {
     case
       "winter",
@@ -86,11 +86,39 @@ func isValidSeason(season string) bool {
 }
 
 // Checks if given sort is valid
-func isValidSort(sort string) bool {
+// For seasonal anime lists
+func IsValidSeasonalSort(sort string) bool {
   switch sort {
     case
       "anime_score",
       "anime_num_list_users": return true
+    }
+  return false
+}
+
+// Checks if given sort is valid
+// for user anime lists
+func IsValidListSort(sort string) bool {
+  switch sort {
+    case
+      "list_score",
+      "list_updated_at",
+      "anime_title",
+      "anime_start_date",
+      "anime_id": return true
+    }
+  return false
+}
+
+// Checks if given anime list status is valid
+func IsValidListStatus(status string) bool {
+  switch status {
+    case
+      "watching",
+      "completed",
+      "on_hold",
+      "dropped",
+      "plan_to_watch": return true
     }
   return false
 }

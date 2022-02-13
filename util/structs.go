@@ -14,20 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-package anime
+package util
 
-// contains previous/next page for anime list
-type ListPaging struct {
-  NextPage string `json:"next"`
-  PrevPage string `json:"previous"` // might need checking
-}
-
-type Season struct {
-  Year int    `json:"year"`
-  Name string `json:"season"`
-}
-
-type AnimeList struct {
-  Animes []Anime
-  Paging ListPaging
+/* NOTE: MAL still seems to send some fields
+ * even if they aren't requested.
+ * those include Title, Picture, Id, etc */
+// default fields to use when none are specified
+var DefaultFields []string = []string{
+  "id", "title", "main_picture",
+  "alternative_titles", "start_date",
+  "end_date", "synopsis", "mean", "rank",
+  "popularity", "num_list_users",
+  "num_scoring_users", "nsfw", "created_at",
+  "updated_at", "media_type", "status",
+  "genres", "my_list_status", "num_episodes",
+  "start_season", "broadcast", "source",
+  "average_episode_duration", "rating",
+  "pictures", "background", "related_anime",
+  "related_manga", "recommendations",
+  "studios", "statistics",
 }

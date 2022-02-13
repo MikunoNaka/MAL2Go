@@ -20,14 +20,44 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-  "errors"
+	"strconv"
+  "bytes"
 )
 
 // Handles HTTP request with your OAuth token as a Header
-// TODO: Verify that this function is safe to use
-func (c AnimeClient) requestHandler(endpoint string) string {
+func (c AnimeListClient) requestHandler(endpoint, method string) string {
   // generate request
-  req, err := http.NewRequest("GET", endpoint, nil)
+  req, err := http.NewRequest(method, endpoint, nil)
+  if err != nil {
+      log.Fatal(err)
+  }
+  req.Header.Add("Authorization", c.AuthToken)
+
+  // do request
+  res, err := c.HttpClient.Do(req)
+  if err != nil {
+      log.Fatal(err)
+  }
+  defer res.Body.Close()
+
+  // read body
+  body, err := ioutil.ReadAll(res.Body)
+  if err != nil {
+      log.Fatal(err)
+  }
+
+  // for DeleteAnime, its endpoint returns null data
+  if method == "DELETE" {
+    return strconv.Itoa(res.StatusCode)
+  }
+
+  return string(body)
+}
+
+// for PUT requests (used by UpdateAnime)
+func (c AnimeListClient) putRequestHandler(endpoint string, data []uint8) string {
+  // generate request
+  req, err := http.NewRequest(http.MethodPut, endpoint, bytes.NewBuffer(data))
   if err != nil {
       log.Fatal(err)
   }
@@ -47,41 +77,4 @@ func (c AnimeClient) requestHandler(endpoint string) string {
   }
 
   return string(body)
-}
-
-func urlGenerator(baseUrl string, names []string, values [][]string, isPrimary bool) (string, error) {
-  // length of names and values should be same
-  if cap(names) != cap(values) {
-    return "", errors.New("urlGenerator: Error: Length of names and values don't match.")
-  }
-
-  var fields string
-
-  for index, name := range(names) {
-    var data string
-    /* if the data is the first field in URL, 
-     * it goes like ?key=value
-     * else it is &nextkey=value */
-    if isPrimary {
-      data = "?" + name + "="
-    } else {
-      data = "&" + name + "="
-    }
-
-    // add values to data variable
-    for i, j := range values[index] {
-      if i > 0 {
-        data = data + "," + j
-      } else {
-        data = data + j 
-      }
-    }
-
-    fields = fields + data
-
-    // from now on all other fields will be secondary
-    isPrimary = false
-  }
-
-  return baseUrl + fields, nil
 }

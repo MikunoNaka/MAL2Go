@@ -16,18 +16,12 @@
 
 package anime
 
-// contains previous/next page for anime list
-type ListPaging struct {
-  NextPage string `json:"next"`
-  PrevPage string `json:"previous"` // might need checking
-}
+import (
+  "net/http"
+)
 
-type Season struct {
-  Year int    `json:"year"`
-  Name string `json:"season"`
-}
-
-type AnimeList struct {
-  Animes []Anime
-  Paging ListPaging
+// MyAnimeList Client for mal2go/anime package
+type AnimeListClient struct {
+  AuthToken, RefreshToken string
+  HttpClient http.Client
 }

@@ -16,18 +16,34 @@
 
 package anime
 
-// contains previous/next page for anime list
-type ListPaging struct {
-  NextPage string `json:"next"`
-  PrevPage string `json:"previous"` // might need checking
-}
+import (
+	"io/ioutil"
+	"log"
+	"net/http"
+)
 
-type Season struct {
-  Year int    `json:"year"`
-  Name string `json:"season"`
-}
+// Handles HTTP request with your OAuth token as a Header
+// TODO: Verify that this function is safe to use
+func (c AnimeClient) requestHandler(endpoint string) string {
+  // generate request
+  req, err := http.NewRequest("GET", endpoint, nil)
+  if err != nil {
+      log.Fatal(err)
+  }
+  req.Header.Add("Authorization", c.AuthToken)
 
-type AnimeList struct {
-  Animes []Anime
-  Paging ListPaging
+  // do request
+  res, err := c.HttpClient.Do(req)
+  if err != nil {
+      log.Fatal(err)
+  }
+  defer res.Body.Close()
+
+  // read body
+  body, err := ioutil.ReadAll(res.Body)
+  if err != nil {
+      log.Fatal(err)
+  }
+
+  return string(body)
 }

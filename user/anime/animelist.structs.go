@@ -16,18 +16,27 @@
 
 package anime
 
-// contains previous/next page for anime list
-type ListPaging struct {
-  NextPage string `json:"next"`
-  PrevPage string `json:"previous"` // might need checking
+import (
+  "github.com/MikunoNaka/mal2go/anime"
+)
+
+type AnimeListRaw struct {
+  Data []struct {
+    Anime      anime.Anime      `json:"node"`
+    ListStatus anime.ListStatus `json:"list_status"`
+  }  `json:"data"`
+  Paging anime.ListPaging `json:"paging"`
 }
 
-type Season struct {
-  Year int    `json:"year"`
-  Name string `json:"season"`
-}
-
-type AnimeList struct {
-  Animes []Anime
-  Paging ListPaging
+type UpdateAnimeData struct {
+  Status         string `json:"status"`
+  IsRewatching   bool   `json:"is_rewatching"`
+  Score          int    `json:"score"`
+  EpWatched      int    `json:"num_watched_episodes"`
+  Priority       int    `json:"priority"`
+  TimesRewatched int    `json:"num_times_rewatched"`
+  // NOTE: idk what RewatchValue is
+  RewatchValue   int    `json:"rewatch_value"`
+  Tags           string `json:"tags"`
+  Comments       string `json:"comments"`
 }

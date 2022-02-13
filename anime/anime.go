@@ -21,28 +21,33 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+  e "github.com/MikunoNaka/mal2go/errhandlers"
+  u "github.com/MikunoNaka/mal2go/util"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2/anime"
+
+// MAL Might change this
+const maxAnimeLimit int = 500
 
 // in MAL documentation this is named Get Anime List
 func (c AnimeClient) SearchAnime(searchString string, limit, offset int, fields []string) (AnimeSearch, error) {
   var searchResults AnimeSearch
 
   // error handling for limit and offset
-  limitsErr := limitsErrHandler(limit, offset)
+  limitsErr := e.LimitsErrHandler(limit, offset, maxAnimeLimit)
   if limitsErr != nil {
     return searchResults, limitsErr
   }
 
   // handle all the errors for the fields
-  fields, err := fieldsErrHandler(fields)
+  fields, err := e.FieldsErrHandler(fields)
   if err != nil {
     return searchResults, err
   }
 
   // generate endpoint url with custom params
-  endpoint, _ := urlGenerator(
+  endpoint, _ := u.UrlGenerator(
     BASE_URL,
     []string{"q", "limit", "offset", "fields"},
     [][]string{{searchString}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
@@ -74,12 +79,12 @@ func (c AnimeClient) GetAnimeById(animeId int, fields []string) (Anime, error) {
   var anime Anime
 
   // handle all the errors for the fields
-  fields, err := fieldsErrHandler(fields)
+  fields, err := e.FieldsErrHandler(fields)
   if err != nil {
     return anime, err
   }
 
-  endpoint, _ := urlGenerator(
+  endpoint, _ := u.UrlGenerator(
     BASE_URL + "/" + strconv.Itoa(animeId),
     []string{"fields"},
     /* it seems to still return all fields from the API. 
@@ -100,23 +105,23 @@ func (c AnimeClient) GetAnimeRanking(rankingType string, limit, offset int, fiel
   var animeRanking AnimeRanking
 
   // error handling for limit and offset
-  limitsErr := limitsErrHandler(limit, offset)
+  limitsErr := e.LimitsErrHandler(limit, offset, maxAnimeLimit)
   if limitsErr != nil {
     return animeRanking, limitsErr
   }
 
   // handle all the errors for the fields
-  fields, err := fieldsErrHandler(fields)
+  fields, err := e.FieldsErrHandler(fields)
   if err != nil {
     return animeRanking, err
   }
 
   // if ranking type is invalid
-  if !isValidRankingType(rankingType) {
+  if !e.IsValidRankingType(rankingType) {
     return animeRanking, errors.New(fmt.Sprintf("GetAnimeRanking: Invalid ranking type specified: \"%s\"", rankingType))
   }
 
-  endpoint, _ := urlGenerator(
+  endpoint, _ := u.UrlGenerator(
     BASE_URL + "/ranking",
     []string{"ranking_type", "limit", "offset", "fields"},
     [][]string{{rankingType}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
@@ -157,28 +162,28 @@ func (c AnimeClient) GetSeasonalAnime(year, season, sort string, limit, offset i
   var seasonalAnime SeasonalAnime
 
   // error handling for limit and offset
-  limitsErr := limitsErrHandler(limit, offset)
+  limitsErr := e.LimitsErrHandler(limit, offset, maxAnimeLimit)
   if limitsErr != nil {
     return seasonalAnime, limitsErr
   }
 
   // handle all the errors for the fields
-  fields, err := fieldsErrHandler(fields)
+  fields, err := e.FieldsErrHandler(fields)
   if err != nil {
     return seasonalAnime, err
   }
 
   // checks if valid season is specified
-  if !isValidSeason(season) {
+  if !e.IsValidSeason(season) {
     return seasonalAnime, errors.New(fmt.Sprintf("GetSeasonalAnime: Invalid season specified: \"%s\"", season))
   }
 
   // checks if valid sort is specified
-  if !isValidSort(sort) {
+  if !e.IsValidSeasonalSort(sort) {
     return seasonalAnime, errors.New(fmt.Sprintf("GetSeasonalAnime: Invalid sort specified: \"%s\"", sort))
   }
 
-  endpoint, _ := urlGenerator(
+  endpoint, _ := u.UrlGenerator(
     BASE_URL + fmt.Sprintf("/season/%s/%s", year, season),
     []string{"sort", "limit", "offset", "fields"},
     [][]string{{sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
@@ -211,18 +216,18 @@ func (c AnimeClient) GetSuggestedAnime(limit, offset int, fields []string) (Sugg
   var suggestedAnime SuggestedAnime
 
   // error handling for limit and offset
-  limitsErr := limitsErrHandler(limit, offset)
+  limitsErr := e.LimitsErrHandler(limit, offset, maxAnimeLimit)
   if limitsErr != nil {
     return suggestedAnime, limitsErr
   }
 
   // handle all the errors for the fields
-  fields, err := fieldsErrHandler(fields)
+  fields, err := e.FieldsErrHandler(fields)
   if err != nil {
     return suggestedAnime, err
   }
 
-  endpoint, _ := urlGenerator(
+  endpoint, _ := u.UrlGenerator(
     BASE_URL + "/suggestions",
     []string{"limit", "offset", "fields"},
     [][]string{{strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
