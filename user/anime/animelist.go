@@ -28,6 +28,14 @@ import (
 const BASE_URL string = "https://api.myanimelist.net/v2"
 const maxListLimit int = 1000
 
+// Delete an anime from user's anime list
+func (c AnimeListClient)DeleteAnime(id int) string {
+  endpoint := fmt.Sprintf("%s/anime/%d/my_list_status", BASE_URL, id)
+  /* Returns 200 if anime successfully deleted
+   * Alternatively returns 404 if anime not in user's anime list */
+  return c.requestHandler(endpoint, "DELETE")
+}
+
 // Get authenticated user's anime list
 func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset int) (a.AnimeList, error){
   var userAnimeList a.AnimeList

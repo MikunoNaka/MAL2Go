@@ -20,6 +20,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // Handles HTTP request with your OAuth token as a Header
@@ -42,6 +43,11 @@ func (c AnimeListClient) requestHandler(endpoint, method string) string {
   body, err := ioutil.ReadAll(res.Body)
   if err != nil {
       log.Fatal(err)
+  }
+
+  // for DeleteAnime, its endpoint returns null data
+  if method == "DELETE" {
+    return strconv.Itoa(res.StatusCode)
   }
 
   return string(body)
