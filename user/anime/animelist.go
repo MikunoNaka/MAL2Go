@@ -23,25 +23,18 @@ import (
   "errors"
   a "github.com/MikunoNaka/mal2go/anime"
   e "github.com/MikunoNaka/mal2go/errhandlers"
-  u "github.com/MikunoNaka/mal2go/util"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2"
 const maxListLimit int = 1000
 
 // Get authenticated user's anime list
-func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset int, fields []string) (a.AnimeList, error){
+func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset int) (a.AnimeList, error){
   var userAnimeList a.AnimeList
   // error handling for limit and offset
   limitsErr := e.LimitsErrHandler(limit, offset, maxListLimit)
   if limitsErr != nil {
     return userAnimeList, limitsErr
-  }
-
-  // handle all the errors for the fields
-  fields, err := e.FieldsErrHandler(fields)
-  if err != nil {
-    return userAnimeList, err
   }
 
   // checks if valid sort is specified
@@ -59,12 +52,7 @@ func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset i
     user = "@me"
   }
 
-  endpoint, _ := u.UrlGenerator(
-    BASE_URL + "/users/" + user + "/animelist",
-    []string{"status", "sort", "limit", "offset", "fields"},
-    [][]string{{status}, {sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
-    true,
-  )
+  endpoint := BASE_URL + "/users/" + user + "/animelist?status=" + status + "&sort=" + sort + "&limit=" + strconv.Itoa(limit) + "&offset=" + strconv.Itoa(offset)
 
   // get data from API
   var animeListData AnimeListRaw
