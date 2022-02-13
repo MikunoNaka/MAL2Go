@@ -14,45 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-package anime
+package util
 
 import (
-	"io/ioutil"
-	"log"
-	"net/http"
   "errors"
 )
 
-// Handles HTTP request with your OAuth token as a Header
-// TODO: Verify that this function is safe to use
-func (c AnimeClient) requestHandler(endpoint string) string {
-  // generate request
-  req, err := http.NewRequest("GET", endpoint, nil)
-  if err != nil {
-      log.Fatal(err)
-  }
-  req.Header.Add("Authorization", c.AuthToken)
-
-  // do request
-  res, err := c.HttpClient.Do(req)
-  if err != nil {
-      log.Fatal(err)
-  }
-  defer res.Body.Close()
-
-  // read body
-  body, err := ioutil.ReadAll(res.Body)
-  if err != nil {
-      log.Fatal(err)
-  }
-
-  return string(body)
-}
-
-func urlGenerator(baseUrl string, names []string, values [][]string, isPrimary bool) (string, error) {
+func UrlGenerator(baseUrl string, names []string, values [][]string, isPrimary bool) (string, error) {
   // length of names and values should be same
   if cap(names) != cap(values) {
-    return "", errors.New("urlGenerator: Error: Length of names and values don't match.")
+    return "", errors.New("util.UrlGenerator: Error: Length of names and values don't match.")
   }
 
   var fields string

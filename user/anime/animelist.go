@@ -20,18 +20,31 @@ import (
 	"encoding/json"
 	"fmt"
   "github.com/MikunoNaka/mal2go/anime"
+  e "github.com/MikunoNaka/mal2go/errhandlers"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2"
 
 // Get authenticated user's anime list
-func (c AnimeListClient) GetAnimeList(user, status, sort string/*, limit, offset int*/) {
+func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset int, fields []string) (anime.AnimeList, error){
+  var userAnimeList anime.AnimeList
+  // error handling for limit and offset
+  limitsErr := e.LimitsErrHandler(limit, offset)
+  if limitsErr != nil {
+    return userAnimeList, limitsErr
+  }
+
+  // handle all the errors for the fields
+  fields, err := e.FieldsErrHandler(fields)
+  if err != nil {
+    return userAnimeList, err
+  }
+
   // get own list if user not specified
   if user == "" {
     user = "@me"
   }
 
-  var userAnimeList anime.AnimeList
   endpoint := BASE_URL + "/users/0ZeroTsu/animelist?fields=list_status&limit=4"
 
   // get data from API
@@ -54,6 +67,6 @@ func (c AnimeListClient) GetAnimeList(user, status, sort string/*, limit, offset
     Paging: animeListData.Paging,
   }
 
-  fmt.Println(userAnimeList)
+  return userAnimeList, nil
 }
 

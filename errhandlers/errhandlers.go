@@ -14,23 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-package anime
+package errhandlers
 
 import (
   "errors"
   "fmt"
+  "github.com/MikunoNaka/mal2go/util"
 )
 
 // if fields aren't specified
-func fieldsErrHandler(fields []string) ([]string, error) {
+func FieldsErrHandler(fields []string) ([]string, error) {
   if cap(fields) == 0 {
     // uses all the default fields if none specified
-    return DefaultFields, nil
+    return util.DefaultFields, nil
   }
 
   // checks if each given field is valid
   for _, j := range(fields) {
-    if !isValidField(j) {
+    if !IsValidField(j) {
       return []string{}, errors.New(fmt.Sprintf("InvalidFieldError: Invalid field specified: \"%s\"", j))
     }
   }
@@ -40,7 +41,7 @@ func fieldsErrHandler(fields []string) ([]string, error) {
 }
 
 // if limit or error specified are above the limit
-func limitsErrHandler(limit, offset int) error {
+func LimitsErrHandler(limit, offset int) error {
   maxOffset := 500 - limit
   if limit > 500 {
     return errors.New(fmt.Sprintf("InvalidLimitError: Limit specified too high (%d > 500).", limit))

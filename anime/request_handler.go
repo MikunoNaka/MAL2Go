@@ -23,9 +23,10 @@ import (
 )
 
 // Handles HTTP request with your OAuth token as a Header
-func (c AnimeListClient) requestHandler(endpoint, method string) string {
+// TODO: Verify that this function is safe to use
+func (c AnimeClient) requestHandler(endpoint string) string {
   // generate request
-  req, err := http.NewRequest(method, endpoint, nil)
+  req, err := http.NewRequest("GET", endpoint, nil)
   if err != nil {
       log.Fatal(err)
   }
@@ -46,40 +47,3 @@ func (c AnimeListClient) requestHandler(endpoint, method string) string {
 
   return string(body)
 }
-
-// func urlGenerator(baseUrl string, names []string, values [][]string, isPrimary bool) (string, error) {
-//   // length of names and values should be same
-//   if cap(names) != cap(values) {
-//     return "", errors.New("urlGenerator: Error: Length of names and values don't match.")
-//   }
-// 
-//   var fields string
-// 
-//   for index, name := range(names) {
-//     var data string
-//     /* if the data is the first field in URL, 
-//      * it goes like ?key=value
-//      * else it is &nextkey=value */
-//     if isPrimary {
-//       data = "?" + name + "="
-//     } else {
-//       data = "&" + name + "="
-//     }
-// 
-//     // add values to data variable
-//     for i, j := range values[index] {
-//       if i > 0 {
-//         data = data + "," + j
-//       } else {
-//         data = data + j 
-//       }
-//     }
-// 
-//     fields = fields + data
-// 
-//     // from now on all other fields will be secondary
-//     isPrimary = false
-//   }
-// 
-//   return baseUrl + fields, nil
-// }
