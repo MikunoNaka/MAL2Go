@@ -17,8 +17,9 @@
 package anime
 
 import (
-	"bytes"
+  "strings"
 	"encoding/json"
+  "net/url"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -61,13 +62,21 @@ func (c AnimeListClient) requestHandler(endpoint, method string) string {
 }
 
 // for PUT requests (used by UpdateAnime)
-func (c AnimeListClient) putRequestHandler(endpoint string, data []uint8) serverResponse {
+func (c AnimeListClient) putRequestHandler(endpoint string, updateData UpdateAnimeData) serverResponse {
+  // TODO: make this do other stuff
+  p := url.Values{}
+  p.Set("score", strconv.Itoa(updateData.Score))
+  p.Set("num_watched_episodes", strconv.Itoa(updateData.EpWatched))
+
   // generate request
-  req, err := http.NewRequest(http.MethodPut, endpoint, bytes.NewBuffer(data))
+  req, err := http.NewRequest(http.MethodPut, endpoint, strings.NewReader(p.Encode()))
   if err != nil {
       log.Fatal(err)
   }
   req.Header.Add("Authorization", c.AuthToken)
+  // this makes the sending-data-to-server magic work
+  req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+  req.Header.Add("Content-Length", strconv.Itoa(len(p.Encode())))
 
   // do request
   res, err := c.HttpClient.Do(req)
