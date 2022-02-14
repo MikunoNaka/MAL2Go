@@ -20,6 +20,7 @@ import (
 	"encoding/json"
   "strconv"
   "fmt"
+  "log"
   "errors"
   a "github.com/MikunoNaka/mal2go/anime"
   e "github.com/MikunoNaka/mal2go/errhandlers"
@@ -37,17 +38,21 @@ func (c AnimeListClient)DeleteAnime(id int) string {
 }
 
 // Update/Add an anime to user's anime list
-func (c AnimeListClient)UpdateAnime(id int, data UpdateAnimeData) string {
+func (c AnimeListClient)UpdateAnime(id int, data UpdateAnimeData) serverResponse {
+  /* NOTE: UpdateAnime only adds anime to the list
+   * It doesn't add new anime to the list.
+   * This might be a problem with MAL,
+   * I haven't researched this much */
   endpoint := fmt.Sprintf("%s/anime/%d/my_list_status", BASE_URL, id)
 
   // turn data struct into json
-  pepe, err := json.Marshal(data)
+  jsonData, err := json.Marshal(data)
   if err != nil {
-    fmt.Println(err)
+    log.Println(err)
   }
 
   // finally make API request
-  res := c.putRequestHandler(endpoint, pepe)
+  res := c.putRequestHandler(endpoint, jsonData)
   return res
 }
 

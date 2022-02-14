@@ -17,12 +17,18 @@
 package anime
 
 import (
+	"bytes"
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
-  "bytes"
 )
+
+type serverResponse struct {
+  Message string
+  Error string
+}
 
 // Handles HTTP request with your OAuth token as a Header
 func (c AnimeListClient) requestHandler(endpoint, method string) string {
@@ -55,7 +61,7 @@ func (c AnimeListClient) requestHandler(endpoint, method string) string {
 }
 
 // for PUT requests (used by UpdateAnime)
-func (c AnimeListClient) putRequestHandler(endpoint string, data []uint8) string {
+func (c AnimeListClient) putRequestHandler(endpoint string, data []uint8) serverResponse {
   // generate request
   req, err := http.NewRequest(http.MethodPut, endpoint, bytes.NewBuffer(data))
   if err != nil {
@@ -76,5 +82,9 @@ func (c AnimeListClient) putRequestHandler(endpoint string, data []uint8) string
       log.Fatal(err)
   }
 
-  return string(body)
+  // server response, ie message / error
+  var resp serverResponse
+  json.Unmarshal(body, &resp)
+
+  return resp
 }
