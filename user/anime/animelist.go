@@ -37,12 +37,31 @@ func (c AnimeListClient)DeleteAnime(id int) string {
 }
 
 // Update/Add an anime to user's anime list
-func (c AnimeListClient)UpdateAnime(id int, data UpdateAnimeData) serverResponse {
+func (c AnimeListClient)UpdateAnime(id int, data UpdateAnimeData) (serverResponse, error) {
   endpoint := fmt.Sprintf("%s/anime/%d/my_list_status", BASE_URL, id)
 
+  // checks if specified list status is valid
+  if !e.IsValidListStatus(data.Status) {
+    return serverResponse{}, errors.New(fmt.Sprintf("UpdateAnime: Invalid list status: \"%s\"", data.Status))
+  }
+
+  // checks if specified score is valid
+  if !e.IsValidScore(data.Score) {
+    return serverResponse{}, errors.New(fmt.Sprintf("UpdateAnime: Invalid score: %d doesn't lie within 0-10", data.Score))
+  }
+
+  // checks if specified priority is valid
+  if !e.IsValidPriority(data.Priority) {
+    return serverResponse{}, errors.New(fmt.Sprintf("UpdateAnime: Invalid priority: %d doesn't lie within 0-2", data.Priority))
+  }
+
+  // checks if specified rewatch value is valid
+  if !e.IsValidRewatchValue(data.RewatchValue) {
+    return serverResponse{}, errors.New(fmt.Sprintf("UpdateAnime: Invalid rewatch value: %d doesn't lie within 0-5", data.RewatchValue))
+  }
+
   // make API request
-  res := c.putRequestHandler(endpoint, data)
-  return res
+  return c.putRequestHandler(endpoint, data), nil
 }
 
 // Get authenticated user's anime list
@@ -50,8 +69,7 @@ func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset i
   var userAnimeList a.AnimeList
   // error handling for limit and offset
   limitsErr := e.LimitsErrHandler(limit, offset, maxListLimit)
-  if limitsErr != nil {
-    return userAnimeList, limitsErr
+  if limitsErr != nil { return userAnimeList, limitsErr
   }
 
   // checks if valid sort is specified

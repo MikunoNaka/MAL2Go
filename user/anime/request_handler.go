@@ -2,8 +2,7 @@
  * Copyright (C) 2022  Vidhu Kant Sharma <vidhukant@protonmail.ch>
 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
  * This program is distributed in the hope that it will be useful,
@@ -64,19 +63,31 @@ func (c AnimeListClient) requestHandler(endpoint, method string) string {
 // for PUT requests (used by UpdateAnime)
 func (c AnimeListClient) putRequestHandler(endpoint string, updateData UpdateAnimeData) serverResponse {
   // TODO: make this do other stuff
-  p := url.Values{}
-  p.Set("score", strconv.Itoa(updateData.Score))
-  p.Set("num_watched_episodes", strconv.Itoa(updateData.EpWatched))
+  params := url.Values{}
+
+  /* NOTE: THIS WILL OVERWRITE ANY DATA THAT 
+   * IS NOT SPECIFIED AND SET IT TO NULL */
+  params.Set("status",               updateData.Status)
+  params.Set("is_rewatching",        strconv.FormatBool(updateData.IsRewatching))
+  params.Set("score",                strconv.Itoa(updateData.Score))
+  params.Set("num_watched_episodes", strconv.Itoa(updateData.EpWatched))
+  params.Set("priority",             strconv.Itoa(updateData.Priority))
+  params.Set("num_times_rewatched",  strconv.Itoa(updateData.TimesRewatched))
+  params.Set("rewatch_value",        strconv.Itoa(updateData.RewatchValue))
+  params.Set("tags",                 updateData.Tags)
+  params.Set("comments",             updateData.Comments)
+
+  paramsEncoded := params.Encode()
 
   // generate request
-  req, err := http.NewRequest(http.MethodPut, endpoint, strings.NewReader(p.Encode()))
+  req, err := http.NewRequest(http.MethodPut, endpoint, strings.NewReader(paramsEncoded))
   if err != nil {
       log.Fatal(err)
   }
   req.Header.Add("Authorization", c.AuthToken)
   // this makes the sending-data-to-server magic work
   req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-  req.Header.Add("Content-Length", strconv.Itoa(len(p.Encode())))
+  req.Header.Add("Content-Length", strconv.Itoa(len(paramsEncoded)))
 
   // do request
   res, err := c.HttpClient.Do(req)

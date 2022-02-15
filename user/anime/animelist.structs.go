@@ -29,14 +29,14 @@ type AnimeListRaw struct {
 }
 
 type UpdateAnimeData struct {
-  Status         string `json:"status"`
-  IsRewatching   bool   `json:"is_rewatching"`
-  Score          int    `json:"score"`
-  EpWatched      int    `json:"num_watched_episodes"`
-  Priority       int    `json:"priority"`
-  TimesRewatched int    `json:"num_times_rewatched"`
+  Status         string
+  IsRewatching   bool
+  Score          int
+  EpWatched      int
+  Priority       int
+  TimesRewatched int
   // NOTE: idk what RewatchValue is
-  RewatchValue   int    `json:"rewatch_value"`
-  Tags           string `json:"tags"`
-  Comments       string `json:"comments"`
+  RewatchValue   int
+  Tags           string
+  Comments       string
 }
