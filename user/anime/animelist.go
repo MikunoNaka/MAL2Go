@@ -1,4 +1,4 @@
-/* mal2go - MyAnimeList V2 API wrapper for Go
+/* MAL2Go - MyAnimeList V2 API wrapper for Go
  * Copyright (C) 2022  Vidhu Kant Sharma <vidhukant@protonmail.ch>
 
  * This program is free software: you can redistribute it and/or modify
@@ -29,43 +29,15 @@ const BASE_URL string = "https://api.myanimelist.net/v2"
 const maxListLimit int = 1000
 
 // Delete an anime from user's anime list
-func (c AnimeListClient)DeleteAnime(id int) string {
+func (c Client)DeleteAnime(id int) string {
   endpoint := fmt.Sprintf("%s/anime/%d/my_list_status", BASE_URL, id)
   /* Returns 200 if anime successfully deleted
    * Alternatively returns 404 if anime not in user's anime list */
   return c.requestHandler(endpoint, "DELETE")
 }
 
-// Update/Add an anime to user's anime list
-func (c AnimeListClient)UpdateAnime(id int, data UpdateAnimeData) (serverResponse, error) {
-  endpoint := fmt.Sprintf("%s/anime/%d/my_list_status", BASE_URL, id)
-
-  // checks if specified list status is valid
-  if !e.IsValidListStatus(data.Status) {
-    return serverResponse{}, errors.New(fmt.Sprintf("UpdateAnime: Invalid list status: \"%s\"", data.Status))
-  }
-
-  // checks if specified score is valid
-  if !e.IsValidScore(data.Score) {
-    return serverResponse{}, errors.New(fmt.Sprintf("UpdateAnime: Invalid score: %d doesn't lie within 0-10", data.Score))
-  }
-
-  // checks if specified priority is valid
-  if !e.IsValidPriority(data.Priority) {
-    return serverResponse{}, errors.New(fmt.Sprintf("UpdateAnime: Invalid priority: %d doesn't lie within 0-2", data.Priority))
-  }
-
-  // checks if specified rewatch value is valid
-  if !e.IsValidRewatchValue(data.RewatchValue) {
-    return serverResponse{}, errors.New(fmt.Sprintf("UpdateAnime: Invalid rewatch value: %d doesn't lie within 0-5", data.RewatchValue))
-  }
-
-  // make API request
-  return c.putRequestHandler(endpoint, data), nil
-}
-
 // Get authenticated user's anime list
-func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset int) (a.AnimeList, error){
+func (c Client) GetAnimeList(user, status, sort string, limit, offset int) (a.AnimeList, error){
   var userAnimeList a.AnimeList
   // error handling for limit and offset
   limitsErr := e.LimitsErrHandler(limit, offset, maxListLimit)

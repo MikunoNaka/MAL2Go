@@ -1,4 +1,4 @@
-/* mal2go - MyAnimeList V2 API wrapper for Go
+/* MAL2Go - MyAnimeList V2 API wrapper for Go
  * Copyright (C) 2022  Vidhu Kant Sharma <vidhukant@protonmail.ch>
 
  * This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,13 @@
 package anime
 
 import (
-  "strings"
 	"encoding/json"
-  "net/url"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
+	"strings"
 )
 
 type serverResponse struct {
@@ -31,7 +31,7 @@ type serverResponse struct {
 }
 
 // Handles HTTP request with your OAuth token as a Header
-func (c AnimeListClient) requestHandler(endpoint, method string) string {
+func (c Client) requestHandler(endpoint, method string) string {
   // generate request
   req, err := http.NewRequest(method, endpoint, nil)
   if err != nil {
@@ -60,23 +60,8 @@ func (c AnimeListClient) requestHandler(endpoint, method string) string {
   return string(body)
 }
 
-// for PUT requests (used by UpdateAnime)
-func (c AnimeListClient) putRequestHandler(endpoint string, updateData UpdateAnimeData) serverResponse {
-  // TODO: make this do other stuff
-  params := url.Values{}
-
-  /* NOTE: THIS WILL OVERWRITE ANY DATA THAT 
-   * IS NOT SPECIFIED AND SET IT TO NULL */
-  params.Set("status",               updateData.Status)
-  params.Set("is_rewatching",        strconv.FormatBool(updateData.IsRewatching))
-  params.Set("score",                strconv.Itoa(updateData.Score))
-  params.Set("num_watched_episodes", strconv.Itoa(updateData.EpWatched))
-  params.Set("priority",             strconv.Itoa(updateData.Priority))
-  params.Set("num_times_rewatched",  strconv.Itoa(updateData.TimesRewatched))
-  params.Set("rewatch_value",        strconv.Itoa(updateData.RewatchValue))
-  params.Set("tags",                 updateData.Tags)
-  params.Set("comments",             updateData.Comments)
-
+// for PUT requests (used for updating anime)
+func (c Client) putRequestHandler(endpoint string, params url.Values) serverResponse {
   paramsEncoded := params.Encode()
 
   // generate request
@@ -102,6 +87,7 @@ func (c AnimeListClient) putRequestHandler(endpoint string, updateData UpdateAni
       log.Fatal(err)
   }
 
+  // TODO: there are other serverResponses. Add them
   // server response, ie message / error
   var resp serverResponse
   json.Unmarshal(body, &resp)
