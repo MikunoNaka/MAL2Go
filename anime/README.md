@@ -1,7 +1,7 @@
 # MAL2Go/anime
 MAL2Go `anime` package has functionality related to getting data about anime.
 
-To *update* anime status (score, status, etc) refer to [`user/anime`](user/anime) package.
+To *update* anime status (score, status, etc) refer to [`user/anime`](../user/anime) package.
 
 ## Usage
 Firstly, import this package and instanciate the client.
@@ -58,30 +58,30 @@ fmt.Println(searchResults.ListPaging.NextPage, searchResults.ListPaging.PrevPage
 **More to be added later**
 
 ## Structure
-- [anime.go](anime/anime.go)
+- [anime.go](anime.go)
 Contains all the exported functions for pulling data from the API.
 
-- [anime.structs.go](anime/anime.structs.go)
+- [anime.structs.go](anime.structs.go)
 Contains all the structs representing an anime entry on MyAnimeList.
 
-- [client.go](anime/client.go)
+- [client.go](client.go)
 The Client for accessing the API with this package.
 
-- [general.structs.go](anime/general.structs.go)
+- [general.structs.go](general.structs.go)
 Some structs that can't particularly be grouped with another file.
 
-- [ranking.structs.go](anime/ranking.structs.go)
+- [ranking.structs.go](ranking.structs.go)
 Representing anime ranking data both in the form returned by the API and
 the formatted form to be returned by this package.
 
-- [request_handler.go](anime/request_handler.go)
+- [request_handler.go](request_handler.go)
 Responsible for making HTTP requests
 
-- [search.structs.go](anime/search.structs.go)
+- [search.structs.go](search.structs.go)
 Representing search results.
 
-- [seasonal.structs.go](anime/seasonal.structs.go)
+- [seasonal.structs.go](seasonal.structs.go)
 Representing seasonal anime list.
 
-- [suggestedanime.structs.go](anime/suggestedanime.structs.go)
+- [suggestedanime.structs.go](suggestedanime.structs.go)
 Representing suggested anime data.
