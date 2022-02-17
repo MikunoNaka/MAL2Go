@@ -23,7 +23,7 @@ import (
 )
 
 // Handles HTTP request with your OAuth token as a Header
-func (c MALUserClient) requestHandler(endpoint string) string {
+func (c Client) requestHandler(endpoint string) string {
   // generate request
   req, err := http.NewRequest("GET", endpoint, nil)
   if err != nil {

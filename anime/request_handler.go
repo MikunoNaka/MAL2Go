@@ -24,7 +24,7 @@ import (
 
 // Handles HTTP request with your OAuth token as a Header
 // TODO: Verify that this function is safe to use
-func (c AnimeClient) requestHandler(endpoint string) string {
+func (c Client) requestHandler(endpoint string) string {
   // generate request
   req, err := http.NewRequest("GET", endpoint, nil)
   if err != nil {

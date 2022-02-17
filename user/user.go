@@ -23,7 +23,7 @@ import (
 const BASE_URL string = "https://api.myanimelist.net/v2/users"
 
 // Get info of logged in user
-func (c *MALUserClient) GetSelfUserInfo() UserInfo {
+func (c Client) GetSelfUserInfo() UserInfo {
   /* MAL only supports @me for this */
   endpoint := BASE_URL + "/@me?fields=anime_statistics"
   

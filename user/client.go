@@ -20,4 +20,4 @@ import (
   "github.com/MikunoNaka/MAL2Go/util"
 )
 
-type MALUserClient util.DefaultClient
+type Client util.DefaultClient

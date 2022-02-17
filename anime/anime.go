@@ -31,7 +31,7 @@ const BASE_URL string = "https://api.myanimelist.net/v2/anime"
 const maxAnimeLimit int = 500
 
 // in MAL documentation this is named Get Anime List
-func (c AnimeClient) SearchAnime(searchString string, limit, offset int, fields []string) (AnimeSearch, error) {
+func (c Client) SearchAnime(searchString string, limit, offset int, fields []string) (AnimeSearch, error) {
   var searchResults AnimeSearch
 
   // error handling for limit and offset
@@ -75,7 +75,7 @@ func (c AnimeClient) SearchAnime(searchString string, limit, offset int, fields 
 }
 
 // Each anime has its own ID on MAL
-func (c AnimeClient) GetAnimeById(animeId int, fields []string) (Anime, error) {
+func (c Client) GetAnimeById(animeId int, fields []string) (Anime, error) {
   var anime Anime
 
   // handle all the errors for the fields
@@ -101,7 +101,7 @@ func (c AnimeClient) GetAnimeById(animeId int, fields []string) (Anime, error) {
 }
 
 // Ranking is a list of anime sorted by their rank
-func (c AnimeClient) GetAnimeRanking(rankingType string, limit, offset int, fields []string) (AnimeRanking, error) {
+func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []string) (AnimeRanking, error) {
   var animeRanking AnimeRanking
 
   // error handling for limit and offset
@@ -158,7 +158,7 @@ func (c AnimeClient) GetAnimeRanking(rankingType string, limit, offset int, fiel
 }
 
 // get list of animes from specified season
-func (c AnimeClient) GetSeasonalAnime(year, season, sort string, limit, offset int, fields []string) (SeasonalAnime, error) {
+func (c Client) GetSeasonalAnime(year, season, sort string, limit, offset int, fields []string) (SeasonalAnime, error) {
   var seasonalAnime SeasonalAnime
 
   // error handling for limit and offset
@@ -212,7 +212,7 @@ func (c AnimeClient) GetSeasonalAnime(year, season, sort string, limit, offset i
 }
 
 // get anime suggestions for the user
-func (c AnimeClient) GetSuggestedAnime(limit, offset int, fields []string) (SuggestedAnime, error){
+func (c Client) GetSuggestedAnime(limit, offset int, fields []string) (SuggestedAnime, error){
   var suggestedAnime SuggestedAnime
 
   // error handling for limit and offset
