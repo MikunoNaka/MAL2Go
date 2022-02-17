@@ -1,4 +1,4 @@
-/* mal2go - MyAnimeList V2 API wrapper for Go
+/* MAL2Go - MyAnimeList V2 API wrapper for Go
  * Copyright (C) 2022  Vidhu Kant Sharma <vidhukant@protonmail.ch>
 
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,8 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-  e "github.com/MikunoNaka/mal2go/errhandlers"
-  u "github.com/MikunoNaka/mal2go/util"
+  e "github.com/MikunoNaka/MAL2Go/errhandlers"
+  u "github.com/MikunoNaka/MAL2Go/util"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2/anime"
