@@ -1,4 +1,4 @@
-/* mal2go - MyAnimeList V2 API wrapper for Go
+/* MAL2Go - MyAnimeList V2 API wrapper for Go
  * Copyright (C) 2022  Vidhu Kant Sharma <vidhukant@protonmail.ch>
 
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ package errhandlers
 import (
   "errors"
   "fmt"
-  "github.com/MikunoNaka/mal2go/util"
+  "github.com/MikunoNaka/MAL2Go/util"
 )
 
 // if fields aren't specified
