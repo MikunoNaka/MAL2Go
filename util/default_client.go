@@ -14,10 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-package user
+package util
 
 import (
-  "github.com/MikunoNaka/MAL2Go/util"
+  "net/http"
 )
 
-type MALUserClient util.DefaultClient
+// MyAnimeList Client for mal2go/anime package
+type DefaultClient struct {
+  AuthToken, RefreshToken string
+  HttpClient http.Client
+}

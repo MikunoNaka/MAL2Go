@@ -21,8 +21,8 @@ import (
   "strconv"
   "fmt"
   "errors"
-  a "github.com/MikunoNaka/mal2go/anime"
-  e "github.com/MikunoNaka/mal2go/errhandlers"
+  a "github.com/MikunoNaka/MAL2Go/anime"
+  e "github.com/MikunoNaka/MAL2Go/errhandlers"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2"

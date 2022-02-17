@@ -16,7 +16,7 @@
 package anime
 
 import (
-  e "github.com/MikunoNaka/mal2go/errhandlers"
+  e "github.com/MikunoNaka/MAL2Go/errhandlers"
   "errors"
   "fmt"
 	"net/url"
