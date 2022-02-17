@@ -14,29 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-package anime
+package user
 
 import (
-  "github.com/MikunoNaka/mal2go/anime"
+  "net/http"
 )
 
-type AnimeListRaw struct {
-  Data []struct {
-    Anime      anime.Anime      `json:"node"`
-    ListStatus anime.ListStatus `json:"list_status"`
-  }  `json:"data"`
-  Paging anime.ListPaging `json:"paging"`
-}
-
-type UpdateAnimeData struct {
-  Status         string
-  IsRewatching   bool
-  Score          int
-  EpWatched      int
-  Priority       int
-  TimesRewatched int
-  // NOTE: idk what RewatchValue is
-  RewatchValue   int
-  Tags           string
-  Comments       string
+// MyAnimeList Client for mal2go/anime package
+type MALUserClient struct {
+  AuthToken, RefreshToken string
+  HttpClient http.Client
 }

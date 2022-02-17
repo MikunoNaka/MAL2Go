@@ -1,4 +1,4 @@
-/* mal2go - MyAnimeList V2 API wrapper for Go
+/* MAL2Go - MyAnimeList V2 API wrapper for Go
  * Copyright (C) 2022  Vidhu Kant Sharma <vidhukant@protonmail.ch>
 
  * This program is free software: you can redistribute it and/or modify
@@ -29,35 +29,19 @@ const BASE_URL string = "https://api.myanimelist.net/v2"
 const maxListLimit int = 1000
 
 // Delete an anime from user's anime list
-func (c AnimeListClient)DeleteAnime(id int) string {
+func (c Client)DeleteAnime(id int) string {
   endpoint := fmt.Sprintf("%s/anime/%d/my_list_status", BASE_URL, id)
   /* Returns 200 if anime successfully deleted
    * Alternatively returns 404 if anime not in user's anime list */
   return c.requestHandler(endpoint, "DELETE")
 }
 
-// Update/Add an anime to user's anime list
-func (c AnimeListClient)UpdateAnime(id int, data UpdateAnimeData) string {
-  endpoint := fmt.Sprintf("%s/anime/%d/my_list_status", BASE_URL, id)
-
-  // turn data struct into json
-  pepe, err := json.Marshal(data)
-  if err != nil {
-    fmt.Println(err)
-  }
-
-  // finally make API request
-  res := c.putRequestHandler(endpoint, pepe)
-  return res
-}
-
 // Get authenticated user's anime list
-func (c AnimeListClient) GetAnimeList(user, status, sort string, limit, offset int) (a.AnimeList, error){
+func (c Client) GetAnimeList(user, status, sort string, limit, offset int) (a.AnimeList, error){
   var userAnimeList a.AnimeList
   // error handling for limit and offset
   limitsErr := e.LimitsErrHandler(limit, offset, maxListLimit)
-  if limitsErr != nil {
-    return userAnimeList, limitsErr
+  if limitsErr != nil { return userAnimeList, limitsErr
   }
 
   // checks if valid sort is specified

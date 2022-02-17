@@ -122,3 +122,27 @@ func IsValidListStatus(status string) bool {
     }
   return false
 }
+
+// Checks if given anime score is valid
+func IsValidScore(score int) bool {
+  if score >= 0 && score <= 10 {
+    return true
+  } 
+  return false
+}
+
+// Checks if given anime priority is valid
+func IsValidPriority(priority int) bool {
+  if priority >= 0 && priority <= 2 {
+    return true
+  } 
+  return false
+}
+
+// Checks if given rewatch value is valid
+func IsValidRewatchValue(r int) bool {
+  if r >= 0 && r <= 5 {
+    return true
+  } 
+  return false
+}

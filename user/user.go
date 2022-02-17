@@ -14,29 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-package anime
+package user
 
 import (
-  "github.com/MikunoNaka/mal2go/anime"
+  "encoding/json"
 )
 
-type AnimeListRaw struct {
-  Data []struct {
-    Anime      anime.Anime      `json:"node"`
-    ListStatus anime.ListStatus `json:"list_status"`
-  }  `json:"data"`
-  Paging anime.ListPaging `json:"paging"`
-}
+const BASE_URL string = "https://api.myanimelist.net/v2/users"
 
-type UpdateAnimeData struct {
-  Status         string
-  IsRewatching   bool
-  Score          int
-  EpWatched      int
-  Priority       int
-  TimesRewatched int
-  // NOTE: idk what RewatchValue is
-  RewatchValue   int
-  Tags           string
-  Comments       string
+// Get info of logged in user
+func (c *MALUserClient) GetSelfUserInfo() UserInfo {
+  /* MAL only supports @me for this */
+  endpoint := BASE_URL + "/@me?fields=anime_statistics"
+  
+  // get data from API
+  var userData UserInfo
+  data := c.requestHandler(endpoint)
+  json.Unmarshal([]byte(data), &userData)
+
+  return userData
 }

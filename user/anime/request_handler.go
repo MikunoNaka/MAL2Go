@@ -1,9 +1,8 @@
-/* mal2go - MyAnimeList V2 API wrapper for Go
+/* MAL2Go - MyAnimeList V2 API wrapper for Go
  * Copyright (C) 2022  Vidhu Kant Sharma <vidhukant@protonmail.ch>
 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
 
  * This program is distributed in the hope that it will be useful,
@@ -17,15 +16,22 @@
 package anime
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
-  "bytes"
+	"strings"
 )
 
+type serverResponse struct {
+  Message string
+  Error string
+}
+
 // Handles HTTP request with your OAuth token as a Header
-func (c AnimeListClient) requestHandler(endpoint, method string) string {
+func (c Client) requestHandler(endpoint, method string) string {
   // generate request
   req, err := http.NewRequest(method, endpoint, nil)
   if err != nil {
@@ -54,14 +60,19 @@ func (c AnimeListClient) requestHandler(endpoint, method string) string {
   return string(body)
 }
 
-// for PUT requests (used by UpdateAnime)
-func (c AnimeListClient) putRequestHandler(endpoint string, data []uint8) string {
+// for PUT requests (used for updating anime)
+func (c Client) putRequestHandler(endpoint string, params url.Values) serverResponse {
+  paramsEncoded := params.Encode()
+
   // generate request
-  req, err := http.NewRequest(http.MethodPut, endpoint, bytes.NewBuffer(data))
+  req, err := http.NewRequest(http.MethodPut, endpoint, strings.NewReader(paramsEncoded))
   if err != nil {
       log.Fatal(err)
   }
   req.Header.Add("Authorization", c.AuthToken)
+  // this makes the sending-data-to-server magic work
+  req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+  req.Header.Add("Content-Length", strconv.Itoa(len(paramsEncoded)))
 
   // do request
   res, err := c.HttpClient.Do(req)
@@ -76,5 +87,10 @@ func (c AnimeListClient) putRequestHandler(endpoint string, data []uint8) string
       log.Fatal(err)
   }
 
-  return string(body)
+  // TODO: there are other serverResponses. Add them
+  // server response, ie message / error
+  var resp serverResponse
+  json.Unmarshal(body, &resp)
+
+  return resp
 }

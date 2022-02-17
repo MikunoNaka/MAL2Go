@@ -1,4 +1,4 @@
-/* mal2go - MyAnimeList V2 API wrapper for Go
+/* MAL2Go - MyAnimeList V2 API wrapper for Go
  * Copyright (C) 2022  Vidhu Kant Sharma <vidhukant@protonmail.ch>
 
  * This program is free software: you can redistribute it and/or modify
@@ -20,8 +20,8 @@ import (
   "net/http"
 )
 
-// MyAnimeList Client for mal2go/anime package
-type AnimeListClient struct {
+// MyAnimeList Client for mal2go/user/anime package
+type Client struct {
   AuthToken, RefreshToken string
   HttpClient http.Client
 }
