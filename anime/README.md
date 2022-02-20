@@ -55,7 +55,109 @@ fmt.Println(searchResults.Animes) // print list of the search results
 fmt.Println(searchResults.ListPaging.NextPage, searchResults.ListPaging.PrevPage)
 ```
 
-**More to be added later**
+- ### Getting an anime's info
+Each anime on MyAnimeList has a unique ID, which you need to find it
+
+Refer to [anime.structs.go](anime.structs.go) to find out all the keys the Anime struct has
+
+``` go
+animeId := 42351
+fields := []string{} // pull every field
+
+anime, err := myClient.GetAnimeById(animeId, fields)
+if err != nil {
+  fmt.Println(err)
+}
+
+fmt.Println(anime.Title, anime.MeanScore, anime.MyListStatus.Status)
+```
+
+- ### Get anime ranking
+Ranking is a list of anime sorted by their rank
+
+Possible ranking types are:
+- `all`
+- `airing`
+- `upcoming`
+- `tv`
+- `ova`
+- `movie`
+- `special`
+- `bypopularity`
+- `favorite`
+
+``` go
+rankingType := "favorite"
+limit, offset := 10, 0
+fields := []string{"title", "media_type"}
+
+ranking, err := myClient.GetAnimeRanking(rankingType, limit, offset, fields)
+
+// loop over the array of "titles" returned by the API
+for _, rankingAnime := range ranking.Titles {
+  anime := rankingAnime.Anime
+  rankNum := rankingAnime.RankNum
+
+  fmt.Printf("Title: %s, Rank Number: %d", anime.Title, rankNum)
+}
+
+// ranking lists have page numbers
+fmt.Println(ranking.Paging.NextPage, ranking.Paging.PrevPage)
+```
+
+- ### Get seasonal anime
+Get a list of anime from a particular season/year
+
+Possible seasons are:
+- `winter`
+- `spring`
+- `summer`
+- `fall`
+
+Possible ways to sort are:
+- `anime_score`
+- `anime_num_list_users`
+
+``` go
+year := "2021"
+season := "winter"
+sort := "anime_score"
+
+limit, offset := 10, 0
+
+fields := []string{"title"}
+
+seasonalAnime, err := myClient.GetSeasonalAnime(year, season, sort, limit, offset, fields)
+if err != nil {
+  fmt.Println(err)
+}
+
+for _, anime := range seasonalAnime.Animes {
+  fmt.Println(anime.Title)
+}
+
+fmt.Println(seaonalAnime.Season)
+fmt.Println(seasonalAnime.Paging.NextPage, seasonalAnime.Paging.PrevPage)
+```
+
+- ### Get suggested anime
+Returns suggestions related to the authenticated user
+
+``` go
+limit, offset := 10, 0
+fields := []string{"title"}
+
+suggestedAnime, err := myClient.GetSuggestedAnime(limit, offset, fields)
+if err != nil {
+  fmt.Println(err)
+}
+
+for _, anime := range suggestedAnime.Animes {
+  fmt.Println(anime.Titile)
+}
+
+fmt.Println(suggestedAnime.ListPaging.NextPage, suggestedAnime.ListPaging.PrevPage)
+```
 
 ## Structure
 - [anime.go](anime.go)
