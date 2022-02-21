@@ -3,6 +3,12 @@ MAL2Go `anime` package has functionality related to getting data about anime.
 
 To *update* anime status (score, status, etc) refer to [`user/anime`](../user/anime) package.
 
+## Installation
+In a terminal, run
+``` fish
+go get "github.com/MikunoNaka/MAL2Go/anime"
+```
+
 ## Usage
 Firstly, import this package and instanciate the client.
 ``` go
