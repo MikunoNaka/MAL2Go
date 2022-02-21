@@ -39,9 +39,10 @@ func (c Client)DeleteAnime(id int) string {
 // Get authenticated user's anime list
 func (c Client) GetAnimeList(user, status, sort string, limit, offset int) (a.AnimeList, error){
   var userAnimeList a.AnimeList
-  // error handling for limit and offset
-  limitsErr := e.LimitsErrHandler(limit, offset, maxListLimit)
-  if limitsErr != nil { return userAnimeList, limitsErr
+  // error handling for limit
+  limitErr := e.LimitErrHandler(limit, maxListLimit)
+  if limitErr != nil { 
+    return userAnimeList, limitErr
   }
 
   // checks if valid sort is specified

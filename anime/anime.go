@@ -34,10 +34,10 @@ const maxAnimeLimit int = 500
 func (c Client) SearchAnime(searchString string, limit, offset int, fields []string) (AnimeSearch, error) {
   var searchResults AnimeSearch
 
-  // error handling for limit and offset
-  limitsErr := e.LimitsErrHandler(limit, offset, maxAnimeLimit)
-  if limitsErr != nil {
-    return searchResults, limitsErr
+  // error handling for limit
+  limitErr := e.LimitErrHandler(limit, maxAnimeLimit)
+  if limitErr != nil {
+    return searchResults, limitErr
   }
 
   // handle all the errors for the fields
@@ -104,10 +104,10 @@ func (c Client) GetAnimeById(animeId int, fields []string) (Anime, error) {
 func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []string) (AnimeRanking, error) {
   var animeRanking AnimeRanking
 
-  // error handling for limit and offset
-  limitsErr := e.LimitsErrHandler(limit, offset, maxAnimeLimit)
-  if limitsErr != nil {
-    return animeRanking, limitsErr
+  // error handling for limit
+  limitErr := e.LimitErrHandler(limit, maxAnimeLimit)
+  if limitErr != nil {
+    return animeRanking, limitErr
   }
 
   // handle all the errors for the fields
@@ -161,10 +161,10 @@ func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []
 func (c Client) GetSeasonalAnime(year, season, sort string, limit, offset int, fields []string) (SeasonalAnime, error) {
   var seasonalAnime SeasonalAnime
 
-  // error handling for limit and offset
-  limitsErr := e.LimitsErrHandler(limit, offset, maxAnimeLimit)
-  if limitsErr != nil {
-    return seasonalAnime, limitsErr
+  // error handling for limit
+  limitErr := e.LimitErrHandler(limit, maxAnimeLimit)
+  if limitErr != nil {
+    return seasonalAnime, limitErr
   }
 
   // handle all the errors for the fields
@@ -215,10 +215,10 @@ func (c Client) GetSeasonalAnime(year, season, sort string, limit, offset int, f
 func (c Client) GetSuggestedAnime(limit, offset int, fields []string) (SuggestedAnime, error){
   var suggestedAnime SuggestedAnime
 
-  // error handling for limit and offset
-  limitsErr := e.LimitsErrHandler(limit, offset, maxAnimeLimit)
-  if limitsErr != nil {
-    return suggestedAnime, limitsErr
+  // error handling for limit
+  limitErr := e.LimitErrHandler(limit, maxAnimeLimit)
+  if limitErr != nil {
+    return suggestedAnime, limitErr
   }
 
   // handle all the errors for the fields
