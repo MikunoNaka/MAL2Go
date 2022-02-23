@@ -134,20 +134,20 @@ func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []
   json.Unmarshal([]byte(data), &rankingData)
 
   // Adding all the animes in ranking list to a slice
-  var animeRankingTitles []AnimeRankingTitle
-  for _, element := range rankingData.Data {
-    animeRankingTitles = append(
-      animeRankingTitles,
-      AnimeRankingTitle {
-        Anime:   element.Anime, 
-        RankNum: element.Ranking.Rank,
-      },
-    )
+  var animes []rAnime
+
+  for _, anime := range rankingData.Data {
+    // set RankNum for anime
+    newManga := anime.Anime
+    newManga.RankNum = anime.Ranking.Rank
+
+    // add newManga to list
+    animes = append(animes, newManga)
   }
 
   // Finally, create the AnimeRanking object
   animeRanking = AnimeRanking {
-    Titles: animeRankingTitles,
+    Animes: animes,
     Paging: ListPaging {
       NextPage: rankingData.Paging.NextPage,
       PrevPage: rankingData.Paging.PrevPage,

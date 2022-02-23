@@ -16,10 +16,16 @@
 
 package anime
 
+// Anime but with an extra RankNum field
+type rAnime struct {
+  Anime
+  RankNum int
+}
+
 // this is how the API returns data (looks horrible)
 type RawRanking struct {
   Data []struct {
-    Anime Anime `json:"node"`
+    Anime rAnime `json:"node"`
     Ranking struct {
       Rank int `json:"rank"`
     } `json:"ranking"`
@@ -28,14 +34,8 @@ type RawRanking struct {
   Paging ListPaging `json:"paging"`
 }
 
-// each anime has a ranking number
-type AnimeRankingTitle struct {
-  Anime   Anime
-  RankNum int
-}
-
 // this is how mal2go returns data
 type AnimeRanking struct {
-  Titles []AnimeRankingTitle
+  Animes []rAnime
   Paging ListPaging
 }
