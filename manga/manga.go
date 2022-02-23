@@ -18,8 +18,8 @@ package manga
 
 import (
 	"encoding/json"
-	// "errors"
-	// "fmt"
+	"errors"
+	"fmt"
 	"strconv"
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
   u "github.com/MikunoNaka/MAL2Go/util"
@@ -41,7 +41,7 @@ func (c Client) SearchManga(searchString string, limit, offset int, fields []str
   }
 
   // handle all the errors for the fields
-  fields, err := e.FieldsErrHandler(fields)
+  fields, err := e.MangaFieldsErrHandler(fields)
   if err != nil {
     return searchResults, err
   }
@@ -79,7 +79,7 @@ func (c Client) GetMangaById(mangaId int, fields []string) (Manga, error) {
   var manga Manga
 
   // handle all the errors for the fields
-  fields, err := e.FieldsErrHandler(fields)
+  fields, err := e.MangaFieldsErrHandler(fields)
   if err != nil {
     return manga, err
   }
@@ -97,59 +97,59 @@ func (c Client) GetMangaById(mangaId int, fields []string) (Manga, error) {
   return manga, nil
 }
 
-// // Ranking is a list of anime sorted by their rank
-// func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []string) (AnimeRanking, error) {
-//   var animeRanking AnimeRanking
-// 
-//   // error handling for limit
-//   limitErr := e.LimitErrHandler(limit, maxAnimeLimit)
-//   if limitErr != nil {
-//     return animeRanking, limitErr
-//   }
-// 
-//   // handle all the errors for the fields
-//   fields, err := e.FieldsErrHandler(fields)
-//   if err != nil {
-//     return animeRanking, err
-//   }
-// 
-//   // if ranking type is invalid
-//   if !e.IsValidRankingType(rankingType) {
-//     return animeRanking, errors.New(fmt.Sprintf("GetAnimeRanking: Invalid ranking type specified: \"%s\"", rankingType))
-//   }
-// 
-//   endpoint, _ := u.UrlGenerator(
-//     BASE_URL + "/ranking",
-//     []string{"ranking_type", "limit", "offset", "fields"},
-//     [][]string{{rankingType}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
-//     true,
-//   )
-// 
-//   // gets data from API and stores it in a struct
-//   var rankingData RawRanking
-//   data := c.requestHandler(endpoint)
-//   json.Unmarshal([]byte(data), &rankingData)
-// 
-//   // Adding all the animes in ranking list to a slice
-//   var animeRankingTitles []AnimeRankingTitle
-//   for _, element := range rankingData.Data {
-//     animeRankingTitles = append(
-//       animeRankingTitles,
-//       AnimeRankingTitle {
-//         Anime:   element.Anime, 
-//         RankNum: element.Ranking.Rank,
-//       },
-//     )
-//   }
-// 
-//   // Finally, create the AnimeRanking object
-//   animeRanking = AnimeRanking {
-//     Titles: animeRankingTitles,
-//     Paging: ListPaging {
-//       NextPage: rankingData.Paging.NextPage,
-//       PrevPage: rankingData.Paging.PrevPage,
-//     },
-//   }
-// 
-//   return animeRanking, nil
-// }
+// Ranking is a list of anime sorted by their rank
+func (c Client) GetMangaRanking(rankingType string, limit, offset int, fields []string) (MangaRanking, error) {
+  var mangaRanking MangaRanking
+
+  // error handling for limit
+  limitErr := e.LimitErrHandler(limit, maxMangaLimit)
+  if limitErr != nil {
+    return mangaRanking, limitErr
+  }
+
+  // handle all the errors for the fields
+  fields, err := e.MangaFieldsErrHandler(fields)
+  if err != nil {
+    return mangaRanking, err
+  }
+
+  // if ranking type is invalid
+  if !e.IsValidMangaRankingType(rankingType) {
+    return mangaRanking, errors.New(fmt.Sprintf("GetMangaRanking: Invalid ranking type specified: \"%s\"", rankingType))
+  }
+
+  endpoint, _ := u.UrlGenerator(
+    BASE_URL + "/ranking",
+    []string{"ranking_type", "limit", "offset", "fields"},
+    [][]string{{rankingType}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+    true,
+  )
+
+  // gets data from API and stores it in a struct
+  var rankingData RawRanking
+  data := c.requestHandler(endpoint)
+  json.Unmarshal([]byte(data), &rankingData)
+
+  // Adding all the animes in ranking list to a slice
+  var mangas []rManga
+
+  for _, manga := range rankingData.Data {
+    // set RankNum for manga
+    newManga := manga.Manga
+    newManga.RankNum = manga.Ranking.Rank
+
+    // add newManga to list
+    mangas = append(mangas, newManga)
+  }
+
+  // Finally, create the AnimeRanking object
+  mangaRanking = MangaRanking {
+    Mangas: mangas,
+    Paging: ListPaging {
+      NextPage: rankingData.Paging.NextPage,
+      PrevPage: rankingData.Paging.PrevPage,
+    },
+  }
+
+  return mangaRanking, nil
+}

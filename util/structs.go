@@ -19,7 +19,7 @@ package util
 /* NOTE: MAL still seems to send some fields
  * even if they aren't requested.
  * those include Title, Picture, Id, etc */
-// default fields to use when none are specified
+// default anime fields to use when none are specified
 var DefaultFields []string = []string{
   "id", "title", "main_picture",
   "alternative_titles", "start_date",
@@ -33,6 +33,19 @@ var DefaultFields []string = []string{
   "pictures", "background", "related_anime",
   "related_manga", "recommendations",
   "studios", "statistics",
+}
+
+// default manga fields to use when none are specified
+var DefaultMangaFields []string = []string{
+  "id", "title", "main_picture",
+  "alternative_titles", "start_date", "end_date",
+  "synopsis", "mean", "rank",
+  "popularity", "num_list_users", "num_scoring_users",
+  "nsfw", "created_at", "media_type",
+  "status", "genres", "my_list_status",
+  "num_volumes", "num_chapters", "authors",
+  "pictures", "background", "related_anime",
+  "related_manga", "recommendations", "serialization",
 }
 
 // contains previous/next page for anime list

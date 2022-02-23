@@ -22,8 +22,9 @@ import (
   "github.com/MikunoNaka/MAL2Go/util"
 )
 
-// if fields aren't specified
+// this is only for anime fields
 func FieldsErrHandler(fields []string) ([]string, error) {
+  // if fields aren't specified
   if cap(fields) == 0 {
     // uses all the default fields if none specified
     return util.DefaultFields, nil
@@ -32,6 +33,25 @@ func FieldsErrHandler(fields []string) ([]string, error) {
   // checks if each given field is valid
   for _, j := range(fields) {
     if !IsValidField(j) {
+      return []string{}, errors.New(fmt.Sprintf("InvalidFieldError: Invalid field specified: \"%s\"", j))
+    }
+  }
+
+  // everything's fine!
+  return fields, nil
+}
+
+// only for manga fields
+func MangaFieldsErrHandler(fields []string) ([]string, error) {
+  // if fields aren't specified
+  if cap(fields) == 0 {
+    // uses all the default fields if none specified
+    return util.DefaultMangaFields, nil
+  }
+
+  // checks if each given field is valid
+  for _, j := range(fields) {
+    if !IsValidMangaField(j) {
       return []string{}, errors.New(fmt.Sprintf("InvalidFieldError: Invalid field specified: \"%s\"", j))
     }
   }
