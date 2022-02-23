@@ -26,7 +26,7 @@ type MangaSearchRaw struct {
 }
 
 // this is how mal2go returns data
-type AnimeSearch struct {
+type MangaSearch struct {
   Mangas []Manga
   Paging ListPaging
 }
