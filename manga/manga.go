@@ -97,7 +97,7 @@ func (c Client) GetMangaById(mangaId int, fields []string) (Manga, error) {
   return manga, nil
 }
 
-// Ranking is a list of anime sorted by their rank
+// Ranking is a list of manga sorted by their rank
 func (c Client) GetMangaRanking(rankingType string, limit, offset int, fields []string) (MangaRanking, error) {
   var mangaRanking MangaRanking
 
@@ -130,7 +130,7 @@ func (c Client) GetMangaRanking(rankingType string, limit, offset int, fields []
   data := c.requestHandler(endpoint)
   json.Unmarshal([]byte(data), &rankingData)
 
-  // Adding all the animes in ranking list to a slice
+  // Adding all the mangas in ranking list to a slice
   var mangas []rManga
 
   for _, manga := range rankingData.Data {
