@@ -21,12 +21,19 @@ import (
   "github.com/MikunoNaka/MAL2Go/manga"
 )
 
+type Manga manga.Manga
+
 type MangaListRaw struct {
   Data []struct {
-    Manga      manga.Manga      `json:"node"`
+    Manga      Manga      `json:"node"`
     ListStatus manga.ListStatus `json:"list_status"`
   }  `json:"data"`
   Paging util.ListPaging `json:"paging"`
+}
+
+type MangaList struct {
+  Mangas []Manga
+  Paging util.ListPaging
 }
 
 type UpdateMangaData struct {
