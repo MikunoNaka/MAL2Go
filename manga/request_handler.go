@@ -14,21 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-package anime
+package manga
 
 import (
-  "github.com/MikunoNaka/MAL2Go/util"
+	"io/ioutil"
+	"log"
+	"net/http"
 )
 
-// contains previous/next page for anime list
-type ListPaging util.ListPaging
+// Handles HTTP request with your OAuth token as a Header
+func (c Client) requestHandler(endpoint string) string {
+  // generate request
+  req, err := http.NewRequest("GET", endpoint, nil)
+  if err != nil {
+      log.Fatal(err)
+  }
+  req.Header.Add("Authorization", c.AuthToken)
 
-type Season struct {
-  Year int    `json:"year"`
-  Name string `json:"season"`
-}
+  // do request
+  res, err := c.HttpClient.Do(req)
+  if err != nil {
+      log.Fatal(err)
+  }
+  defer res.Body.Close()
 
-type AnimeList struct {
-  Animes []Anime
-  Paging ListPaging
+  // read body
+  body, err := ioutil.ReadAll(res.Body)
+  if err != nil {
+      log.Fatal(err)
+  }
+
+  return string(body)
 }

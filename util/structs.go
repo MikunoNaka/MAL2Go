@@ -34,3 +34,49 @@ var DefaultFields []string = []string{
   "related_manga", "recommendations",
   "studios", "statistics",
 }
+
+// contains previous/next page for anime list
+// we don't actually need this.
+// TODO: for compatibility's sake, keep this but also define methods
+// to get the prev. and next page's elements automatically
+type ListPaging struct {
+  NextPage string `json:"next"`
+  PrevPage string `json:"previous"`
+}
+
+/* these structs are used 
+ * both by anime and manga package */
+type Picture struct {
+  Medium string `json:"medium"`
+  Large  string `json:"large"`
+}
+
+type StatusStatistics struct {
+  Watching    string `json:"watching"` 
+  Completed   string `json:"completed"`
+  OnHold      string `json:"on_hold"`
+  Dropped     string `json:"dropped"`
+  PlanToWatch string `json:"plan_to_watch"`
+}
+
+type Genre struct {
+  Id   int    `json:"id"`
+  Name string `json:"name"`
+}
+
+type DefaultListStatus struct {
+  Status       string `json:"status"`
+  Score        int    `json:"score"`
+  StartDate    string `json:"start_date"`
+  FinishDate   string `json:"finish_date"`
+  Priority     int    `json:"priority"`
+  Tags         string `json:"tags"`
+  Comments     string `json:"comments"`
+  UpdatedAt    string `json:"updated_at"`
+}
+
+type AltTitles struct {
+  Synonyms []string `json:"synonyms"`
+  En       string   `json:"en"`
+  Ja       string   `json:"ja"`
+}

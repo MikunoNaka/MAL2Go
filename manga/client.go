@@ -14,21 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-package anime
+package manga
 
 import (
   "github.com/MikunoNaka/MAL2Go/util"
 )
 
-// contains previous/next page for anime list
-type ListPaging util.ListPaging
-
-type Season struct {
-  Year int    `json:"year"`
-  Name string `json:"season"`
-}
-
-type AnimeList struct {
-  Animes []Anime
-  Paging ListPaging
-}
+type Client util.DefaultClient

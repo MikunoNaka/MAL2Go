@@ -14,21 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-package anime
+package manga
 
-import (
-  "github.com/MikunoNaka/MAL2Go/util"
-)
+// this is how the API returns data (looks horrible)
+type MangaSearchRaw struct {
+  Data []struct {
+    Manga Manga `json:"node"`
+  } `json:"data"`
 
-// contains previous/next page for anime list
-type ListPaging util.ListPaging
-
-type Season struct {
-  Year int    `json:"year"`
-  Name string `json:"season"`
+  Paging ListPaging `json:"paging"`
 }
 
-type AnimeList struct {
-  Animes []Anime
+// this is how mal2go returns data
+type AnimeSearch struct {
+  Mangas []Manga
   Paging ListPaging
 }
