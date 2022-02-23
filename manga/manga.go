@@ -74,31 +74,28 @@ func (c Client) SearchManga(searchString string, limit, offset int, fields []str
   return searchResults, nil
 }
  
-// // Each anime has its own ID on MAL
-// func (c Client) GetAnimeById(animeId int, fields []string) (Anime, error) {
-//   var anime Anime
-// 
-//   // handle all the errors for the fields
-//   fields, err := e.FieldsErrHandler(fields)
-//   if err != nil {
-//     return anime, err
-//   }
-// 
-//   endpoint, _ := u.UrlGenerator(
-//     BASE_URL + "/" + strconv.Itoa(animeId),
-//     []string{"fields"},
-//     /* it seems to still return all fields from the API. 
-//      * this might be an issue with MAL itself
-//      * TODO: look into this */
-//     [][]string{fields},
-//     true,
-//   )
-// 
-//   data := c.requestHandler(endpoint)
-//   json.Unmarshal([]byte(data), &anime)
-// 
-//   return anime, nil
-// }
+// Each manga has its own ID on MAL
+func (c Client) GetMangaById(mangaId int, fields []string) (Manga, error) {
+  var manga Manga
+
+  // handle all the errors for the fields
+  fields, err := e.FieldsErrHandler(fields)
+  if err != nil {
+    return manga, err
+  }
+
+  endpoint, _ := u.UrlGenerator(
+    BASE_URL + "/" + strconv.Itoa(mangaId),
+    []string{"fields"},
+    [][]string{fields},
+    true,
+  )
+
+  data := c.requestHandler(endpoint)
+  json.Unmarshal([]byte(data), &manga)
+
+  return manga, nil
+}
 
 // // Ranking is a list of anime sorted by their rank
 // func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []string) (AnimeRanking, error) {
