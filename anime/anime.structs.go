@@ -77,7 +77,7 @@ type Anime struct {
   MediaType         string           `json:"media_type"`
   Status            string           `json:"status"`
   Genres            []u.Genre          `json:"genres"`
-  MyListStatus      ListStatus       `json:"my_list_status"`
+  ListStatus        ListStatus       `json:"my_list_status"`
   NumEpisodes       int              `json:"num_episodes"`
   StartSeason       Season           `json:"start_season"`
   Broadcast         Broadcast        `json:"broadcast"`

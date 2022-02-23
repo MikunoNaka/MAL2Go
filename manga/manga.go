@@ -28,7 +28,7 @@ import (
 const BASE_URL string = "https://api.myanimelist.net/v2/manga"
 
 // MAL Might change this
-const maxMangaLimit int = 100
+const maxMangaLimit int = 500
 
 // in MAL documentation this is named Get Manga List
 func (c Client) SearchManga(searchString string, limit, offset int, fields []string) (MangaSearch, error) {

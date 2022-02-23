@@ -53,7 +53,7 @@ type Manga struct {
   UpdatedAt     string         `json:"updated_at"`
   MediaType     string         `json:"media_type"`
   Status        string         `json:"status"`
-  MyListStattus ListStatus     `json:"my_list_status"`
+  ListStatus    ListStatus     `json:"my_list_status"`
   NumVolumes    int            `json:"num_volumes"`
   NumChapters   int            `json:"num_chapters"`
   Authors       []Author       `json:"authors"`
