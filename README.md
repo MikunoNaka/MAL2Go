@@ -12,6 +12,9 @@ Go needs to be installed and `$GOPATH` should be set up
 [anime](anime) package
 contains all the functionality for pulling data about anime from the API.
 
+[manga](manga) package
+contains all the functionality for pulling data about manga from the API.
+
 [user](user) package
 has the functionality for getting user data and updating information.
 
