@@ -68,3 +68,29 @@ func IsValidMangaRankingType(rankingType string) bool {
     }
   return false
 }
+
+// Checks if given sort is valid
+func IsValidMangaListSort(sort string) bool {
+  switch sort {
+    case
+      "list_score",
+      "list_updated_at",
+      "manga_title",
+      "manga_start_date",
+      "manga_id": return true
+    }
+  return false
+}
+
+// Checks if given list status is valid
+func IsValidMangaListStatus(status string) bool {
+  switch status {
+    case
+      "reading",
+      "completed",
+      "on_hold",
+      "dropped",
+      "plan_to_read": return true
+    }
+  return false
+}
