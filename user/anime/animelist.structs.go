@@ -17,6 +17,7 @@
 package anime
 
 import (
+  "github.com/MikunoNaka/MAL2Go/util"
   "github.com/MikunoNaka/MAL2Go/anime"
 )
 
@@ -25,7 +26,7 @@ type AnimeListRaw struct {
     Anime      anime.Anime      `json:"node"`
     ListStatus anime.ListStatus `json:"list_status"`
   }  `json:"data"`
-  Paging anime.ListPaging `json:"paging"`
+  Paging util.ListPaging `json:"paging"`
 }
 
 type UpdateAnimeData struct {

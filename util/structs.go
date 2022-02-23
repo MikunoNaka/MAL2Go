@@ -19,7 +19,7 @@ package util
 /* NOTE: MAL still seems to send some fields
  * even if they aren't requested.
  * those include Title, Picture, Id, etc */
-// default fields to use when none are specified
+// default anime fields to use when none are specified
 var DefaultFields []string = []string{
   "id", "title", "main_picture",
   "alternative_titles", "start_date",
@@ -33,4 +33,63 @@ var DefaultFields []string = []string{
   "pictures", "background", "related_anime",
   "related_manga", "recommendations",
   "studios", "statistics",
+}
+
+// default manga fields to use when none are specified
+var DefaultMangaFields []string = []string{
+  "id", "title", "main_picture",
+  "alternative_titles", "start_date", "end_date",
+  "synopsis", "mean", "rank",
+  "popularity", "num_list_users", "num_scoring_users",
+  "nsfw", "created_at", "media_type",
+  "status", "genres", "my_list_status",
+  "num_volumes", "num_chapters", "authors",
+  "pictures", "background", "related_anime",
+  "related_manga", "recommendations", "serialization",
+}
+
+// contains previous/next page for anime list
+// we don't actually need this.
+// TODO: for compatibility's sake, keep this but also define methods
+// to get the prev. and next page's elements automatically
+type ListPaging struct {
+  NextPage string `json:"next"`
+  PrevPage string `json:"previous"`
+}
+
+/* these structs are used 
+ * both by anime and manga package */
+type Picture struct {
+  Medium string `json:"medium"`
+  Large  string `json:"large"`
+}
+
+type StatusStatistics struct {
+  Watching    string `json:"watching"` 
+  Completed   string `json:"completed"`
+  OnHold      string `json:"on_hold"`
+  Dropped     string `json:"dropped"`
+  PlanToWatch string `json:"plan_to_watch"`
+}
+
+type Genre struct {
+  Id   int    `json:"id"`
+  Name string `json:"name"`
+}
+
+type DefaultListStatus struct {
+  Status       string `json:"status"`
+  Score        int    `json:"score"`
+  StartDate    string `json:"start_date"`
+  FinishDate   string `json:"finish_date"`
+  Priority     int    `json:"priority"`
+  Tags         string `json:"tags"`
+  Comments     string `json:"comments"`
+  UpdatedAt    string `json:"updated_at"`
+}
+
+type AltTitles struct {
+  Synonyms []string `json:"synonyms"`
+  En       string   `json:"en"`
+  Ja       string   `json:"ja"`
 }

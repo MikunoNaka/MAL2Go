@@ -33,7 +33,7 @@ func IsValidRankingType(rankingType string) bool {
   return false
 }
 
-// Checks if given rankingType is valid
+// Checks if given field is valid
 func IsValidField(field string) bool {
   switch field {
     case

@@ -16,35 +16,13 @@
 
 package anime
 
-type AnimePicture struct {
-  Medium string `json:"large"`
-  Large  string `json:"medium"`
-}
-
-type StatusStatistics struct {
-  Watching    string `json:"watching"` 
-  Completed   string `json:"completed"`
-  OnHold      string `json:"on_hold"`
-  Dropped     string `json:"dropped"`
-  PlanToWatch string `json:"plan_to_watch"`
-}
+import (
+  u "github.com/MikunoNaka/MAL2Go/util"
+)
 
 type AnimeStatistics struct {
-  Status       StatusStatistics `json:"status"`
+  Status       u.StatusStatistics `json:"status"`
   NumListUsers int              `json:"num_list_users"`
-}
-
-type Genre struct {
-  Id   int    `json:"id"`
-  Name string `json:"name"`
-}
-
-type ListStatus struct {
-  Status       string `json:"status"`
-  Score        int    `json:"score"`
-  EpWatched    int    `json:"num_episodes_watched"`
-  IsRewatching bool   `json:"is_rewatching"`
-  UpdatedAt    string `json:"updated_at"`
 }
 
 type Broadcast struct {
@@ -68,17 +46,19 @@ type Recommendation struct {
   Num   int   `json:"num_recommendations"`
 }
 
-type AltTitles struct {
-  Synonyms []string `json:"synonyms"`
-  En       string   `json:"en"`
-  Ja       string   `json:"ja"`
+type ListStatus struct {
+  u.DefaultListStatus
+  EpWatched      int  `json:"num_watched_episodes"`
+  IsRewatching   bool `json:"is_rewatching"`
+  TimesRewatched int  `json:"num_times_rewatched"`
+  RewatchValue   int  `json:"rewatch_value"`
 }
 
 type Anime struct {
   Id                int              `json:"id"`
   Title             string           `json:"title"`
-  MainPicture       AnimePicture     `json:"main_picture"`
-  AltTitles         AltTitles        `json:"alternative_titles"`
+  MainPicture       u.Picture        `json:"main_picture"`
+  AltTitles         u.AltTitles        `json:"alternative_titles"`
   StartDate         string           `json:"start_date"`
   EndDate           string           `json:"end_date"`
   Synopsis          string           `json:"synopsis"`
@@ -96,7 +76,7 @@ type Anime struct {
   UpdatedAt         string           `json:"updated_at"`
   MediaType         string           `json:"media_type"`
   Status            string           `json:"status"`
-  Genres            []Genre          `json:"genres"`
+  Genres            []u.Genre          `json:"genres"`
   MyListStatus      ListStatus       `json:"my_list_status"`
   NumEpisodes       int              `json:"num_episodes"`
   StartSeason       Season           `json:"start_season"`
@@ -105,7 +85,7 @@ type Anime struct {
   DurationSeconds   int              `json:"average_episode_duration"`
   // Rating as in R, PG13, etc
   Rating            string           `json:"rating"`
-  Pictures          []AnimePicture   `json:"pictures"`
+  Pictures          []u.Picture      `json:"pictures"`
   Background        string           `json:"background"`
   RelatedAnime      []Related        `json:"related_anime"`
   Recommendations   []Recommendation `json:"recommendations"`
