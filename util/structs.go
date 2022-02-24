@@ -77,17 +77,6 @@ type Genre struct {
   Name string `json:"name"`
 }
 
-type DefaultListStatus struct {
-  Status       string `json:"status"`
-  Score        int    `json:"score"`
-  StartDate    string `json:"start_date"`
-  FinishDate   string `json:"finish_date"`
-  Priority     int    `json:"priority"`
-  Tags         string `json:"tags"`
-  Comments     string `json:"comments"`
-  UpdatedAt    string `json:"updated_at"`
-}
-
 type AltTitles struct {
   Synonyms []string `json:"synonyms"`
   En       string   `json:"en"`

@@ -73,13 +73,13 @@ func (c Client) GetAnimeList(user, status, sort string, limit, offset int) (a.An
   data := c.requestHandler(endpoint, "GET")
   json.Unmarshal([]byte(data), &animeListData)
 
-  // set MyListStatus for each element and add it to array
+  // set ListStatus for each element and add it to array
   var animes []a.Anime
   for _, element := range animeListData.Data {
-    a := element.Anime
-    a.ListStatus = element.ListStatus
+    anime := element.Anime
+    anime.ListStatus = element.ListStatus
 
-    animes = append(animes, a)
+    animes = append(animes, anime)
   }
 
   // finally create AnimeList
