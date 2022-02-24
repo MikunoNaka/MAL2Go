@@ -22,6 +22,7 @@ import (
   "fmt"
   "errors"
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
+  u "github.com/MikunoNaka/MAL2Go/util"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2"
@@ -36,13 +37,22 @@ func (c Client)DeleteManga(id int) string {
 }
 
 // Get authenticated user's manga list
-func (c Client) GetMangaList(user, status, sort string, limit, offset int) (MangaList, error){
+func (c Client) GetMangaList(user, status, sort string, limit, offset int, fields []string) (MangaList, error){
   var userMangaList MangaList
   // error handling for limit
   limitErr := e.LimitErrHandler(limit, maxListLimit)
   if limitErr != nil { 
     return userMangaList, limitErr
   }
+
+  // handle all the errors for the fields
+  fields, err := e.FieldsErrHandler(fields)
+  if err != nil {
+    return userMangaList, err
+  }
+
+  // append "list_status" field only used by this func.
+  fields = append(fields, "list_status")
 
   // checks if valid sort is specified
   if !e.IsValidMangaListSort(sort) {
@@ -59,12 +69,23 @@ func (c Client) GetMangaList(user, status, sort string, limit, offset int) (Mang
     user = "@me"
   }
 
-  // if status is "" it returns all anime
   var endpoint string
+  // if status is "" it returns all anime
   if status == "" {
-    endpoint = BASE_URL + "/users/" + user + "/mangalist?sort=" + sort + "&limit=" + strconv.Itoa(limit) + "&offset=" + strconv.Itoa(offset)
+    endpoint, _ = u.UrlGenerator(
+      BASE_URL + "/users/" + user + "/mangalist",
+      []string{"sort", "limit", "offset", "fields"},
+      [][]string{{sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+      true,
+    )
   } else {
-    endpoint = BASE_URL + "/users/" + user + "/mangalist?status=" + status + "&sort=" + sort + "&limit=" + strconv.Itoa(limit) + "&offset=" + strconv.Itoa(offset)
+    // status gets included if specified
+    endpoint, _ = u.UrlGenerator(
+      BASE_URL + "/users/" + user + "/mangalist",
+      []string{"status", "sort", "limit", "offset", "fields"},
+      [][]string{{status}, {sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+      true,
+    )
   }
 
   // get data from API
