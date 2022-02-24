@@ -77,7 +77,7 @@ func (c Client) GetAnimeList(user, status, sort string, limit, offset int) (a.An
   var animes []a.Anime
   for _, element := range animeListData.Data {
     a := element.Anime
-    a.MyListStatus = element.ListStatus
+    a.ListStatus = element.ListStatus
 
     animes = append(animes, a)
   }
