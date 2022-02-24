@@ -23,6 +23,7 @@ import (
   "errors"
   a "github.com/MikunoNaka/MAL2Go/anime"
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
+  u "github.com/MikunoNaka/MAL2Go/util"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2"
@@ -37,13 +38,22 @@ func (c Client)DeleteAnime(id int) string {
 }
 
 // Get authenticated user's anime list
-func (c Client) GetAnimeList(user, status, sort string, limit, offset int) (a.AnimeList, error){
+func (c Client) GetAnimeList(user, status, sort string, limit, offset int, fields []string) (a.AnimeList, error){
   var userAnimeList a.AnimeList
   // error handling for limit
   limitErr := e.LimitErrHandler(limit, maxListLimit)
   if limitErr != nil { 
     return userAnimeList, limitErr
   }
+
+  // handle all the errors for the fields
+  fields, err := e.FieldsErrHandler(fields)
+  if err != nil {
+    return userAnimeList, err
+  }
+
+  // append "list_status" field only used by this func.
+  fields = append(fields, "list_status")
 
   // checks if valid sort is specified
   if !e.IsValidListSort(sort) {
@@ -60,13 +70,25 @@ func (c Client) GetAnimeList(user, status, sort string, limit, offset int) (a.An
     user = "@me"
   }
 
-  // if status is "" it returns all anime
   var endpoint string
+  // if status is "" it returns all anime
   if status == "" {
-    endpoint = BASE_URL + "/users/" + user + "/animelist?sort=" + sort + "&limit=" + strconv.Itoa(limit) + "&offset=" + strconv.Itoa(offset)
+    endpoint, _ = u.UrlGenerator(
+      BASE_URL + "/users/" + user + "/animelist",
+      []string{"sort", "limit", "offset", "fields"},
+      [][]string{{sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+      true,
+    )
   } else {
-    endpoint = BASE_URL + "/users/" + user + "/animelist?status=" + status + "&sort=" + sort + "&limit=" + strconv.Itoa(limit) + "&offset=" + strconv.Itoa(offset)
+    // status gets included if specified
+    endpoint, _ = u.UrlGenerator(
+      BASE_URL + "/users/" + user + "/animelist",
+      []string{"status", "sort", "limit", "offset", "fields"},
+      [][]string{{status}, {sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+      true,
+    )
   }
+
 
   // get data from API
   var animeListData AnimeListRaw
