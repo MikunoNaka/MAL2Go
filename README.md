@@ -9,6 +9,7 @@ go get github.com/MikunoNaka/MAL2Go/anime
 go get github.com/MikunoNaka/MAL2Go/manga
 go get github.com/MikunoNaka/MAL2Go/user
 go get github.com/MikunoNaka/MAL2Go/user/anime
+go get github.com/MikunoNaka/MAL2Go/user/manga
 ```
 To install the packages you'd usually need. To find out more about what each package does, refer to [Package Structure](#Package-Structure)
 
@@ -26,6 +27,9 @@ has the functionality for getting user data and updating information.
 
 [user/animelist](user/anime) package
 has the functionality to update the authenticated user's anime list status, etc.
+
+[user/animelist](user/anime) package
+has the functionality to update the authenticated user's manga list status, etc.
 
 [util](util) package has some code used 
 by multiple packages that I think don't belong particularly to one single package

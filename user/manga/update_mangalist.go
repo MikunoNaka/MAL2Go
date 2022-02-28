@@ -45,6 +45,18 @@ func (c Client)SetStatus(id int, status string) (serverResponse, error) {
   return c.putRequestHandler(endpoint, params), nil
 }
 
+// update just a manga's num of volumes read
+func (c Client)SetVolumesRead(id int, volumes int) (serverResponse, error) {
+  endpoint := endpointGenerator(id)
+
+  // data to be sent to the server
+  params := url.Values{}
+  params.Set("num_volumes_read", strconv.Itoa(volumes))
+
+  // make API request
+  return c.putRequestHandler(endpoint, params), nil
+}
+
 // update just a manga's num of chapters read
 func (c Client)SetChaptersRead(id int, chapters int) (serverResponse, error) {
   endpoint := endpointGenerator(id)

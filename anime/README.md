@@ -95,16 +95,13 @@ Possible ranking types are:
 ``` go
 rankingType := "favorite"
 limit, offset := 10, 0
-fields := []string{"title", "media_type"}
+fields := []string{"title"}
 
 ranking, err := myClient.GetAnimeRanking(rankingType, limit, offset, fields)
 
-// loop over the array of "titles" returned by the API
-for _, rankingAnime := range ranking.Titles {
-  anime := rankingAnime.Anime
-  rankNum := rankingAnime.RankNum
-
-  fmt.Printf("Title: %s, Rank Number: %d", anime.Title, rankNum)
+// loop over the array of animes returned by the API
+for _, anime := range ranking.Animes {
+  fmt.Printf("Title: %s, Rank Number: %d", anime.Title, anime.RankNum)
 }
 
 // ranking lists have page numbers

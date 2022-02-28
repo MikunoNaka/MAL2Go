@@ -1,4 +1,4 @@
-# MAL2Go/user
+# MAL2Go/user/anime
 MAL2Go `user/anime` package has functionality related to updating the user's anime list.
 
 To *get* anime data, refer to the [`anime`](../../anime) package.
@@ -39,14 +39,13 @@ fmt.Println(resp)
 
 - ### Get user's anime list
 Possible statuses are:
-- ``
 - `watching`
 - `completed`
 - `on_hold`
 - `dropped`
 - `plan_to_watch`
 
-Leaving blank (``) gets all the anime
+Leaving blank (`""`) gets all the anime
 
 Possible sorts are:
 - `list_score`
@@ -55,7 +54,7 @@ Possible sorts are:
 - `anime_start_date`
 - `anime_id` (beta)
 
-Leaving user blank or as `"@me"` returns the authenticated user's list
+Leaving user blank (`""`) or as `"@me"` returns the authenticated user's list
 
 ``` go
 user := "0ZeroTsu" 
