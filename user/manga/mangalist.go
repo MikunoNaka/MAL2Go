@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-package anime
+package manga
 
 import (
 	"encoding/json"
   "strconv"
   "fmt"
   "errors"
-  a "github.com/MikunoNaka/MAL2Go/anime"
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
   u "github.com/MikunoNaka/MAL2Go/util"
 )
@@ -29,40 +28,40 @@ import (
 const BASE_URL string = "https://api.myanimelist.net/v2"
 const maxListLimit int = 1000
 
-// Delete an anime from user's anime list
-func (c Client)DeleteAnime(id int) string {
-  endpoint := fmt.Sprintf("%s/anime/%d/my_list_status", BASE_URL, id)
-  /* Returns 200 if anime successfully deleted
-   * Alternatively returns 404 if anime not in user's anime list */
+// Delete a manga from user's manga list
+func (c Client)DeleteManga(id int) string {
+  endpoint := fmt.Sprintf("%s/manga/%d/my_list_status", BASE_URL, id)
+  /* Returns 200 if manga successfully deleted
+   * Alternatively returns 404 if manga not in user's manga list */
   return c.requestHandler(endpoint, "DELETE")
 }
 
-// Get authenticated user's anime list
-func (c Client) GetAnimeList(user, status, sort string, limit, offset int, fields []string) (a.AnimeList, error){
-  var userAnimeList a.AnimeList
+// Get authenticated user's manga list
+func (c Client) GetMangaList(user, status, sort string, limit, offset int, fields []string) (MangaList, error){
+  var userMangaList MangaList
   // error handling for limit
   limitErr := e.LimitErrHandler(limit, maxListLimit)
   if limitErr != nil { 
-    return userAnimeList, limitErr
+    return userMangaList, limitErr
   }
 
   // handle all the errors for the fields
   fields, err := e.FieldsErrHandler(fields)
   if err != nil {
-    return userAnimeList, err
+    return userMangaList, err
   }
 
   // append "list_status" field only used by this func.
   fields = append(fields, "list_status")
 
   // checks if valid sort is specified
-  if !e.IsValidListSort(sort) {
-    return userAnimeList, errors.New(fmt.Sprintf("GetAnimeList: Invalid sort specified: \"%s\"", sort))
+  if !e.IsValidMangaListSort(sort) {
+    return userMangaList, errors.New(fmt.Sprintf("GetMangaList: Invalid sort specified: \"%s\"", sort))
   }
 
   // checks if valid status is specified
-  if status != "" && !e.IsValidListStatus(status) {
-    return userAnimeList, errors.New(fmt.Sprintf("GetAnimeList: Invalid status specified: \"%s\"", status))
+  if status != "" && !e.IsValidMangaListStatus(status) {
+    return userMangaList, errors.New(fmt.Sprintf("GetMangaList: Invalid status specified: \"%s\"", status))
   }
 
   // get own list if user not specified
@@ -74,7 +73,7 @@ func (c Client) GetAnimeList(user, status, sort string, limit, offset int, field
   // if status is "" it returns all anime
   if status == "" {
     endpoint, _ = u.UrlGenerator(
-      BASE_URL + "/users/" + user + "/animelist",
+      BASE_URL + "/users/" + user + "/mangalist",
       []string{"sort", "limit", "offset", "fields"},
       [][]string{{sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
       true,
@@ -82,34 +81,33 @@ func (c Client) GetAnimeList(user, status, sort string, limit, offset int, field
   } else {
     // status gets included if specified
     endpoint, _ = u.UrlGenerator(
-      BASE_URL + "/users/" + user + "/animelist",
+      BASE_URL + "/users/" + user + "/mangalist",
       []string{"status", "sort", "limit", "offset", "fields"},
       [][]string{{status}, {sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
       true,
     )
   }
 
-
   // get data from API
-  var animeListData AnimeListRaw
+  var mangaListData MangaListRaw
   data := c.requestHandler(endpoint, "GET")
-  json.Unmarshal([]byte(data), &animeListData)
+  json.Unmarshal([]byte(data), &mangaListData)
 
-  // set ListStatus for each element and add it to array
-  var animes []a.Anime
-  for _, element := range animeListData.Data {
-    anime := element.Anime
-    anime.ListStatus = element.ListStatus
+  // set MyListStatus for each element and add it to array
+  var mangas []Manga
+  for _, element := range mangaListData.Data {
+    a := element.Manga
+    a.ListStatus = element.ListStatus
 
-    animes = append(animes, anime)
+    mangas = append(mangas, a)
   }
 
   // finally create AnimeList
-  userAnimeList = a.AnimeList {
-    Animes: animes,
-    Paging: animeListData.Paging,
+  userMangaList = MangaList {
+    Mangas: mangas,
+    Paging: mangaListData.Paging,
   }
 
-  return userAnimeList, nil
+  return userMangaList, nil
 }
 

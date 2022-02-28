@@ -47,7 +47,16 @@ type Recommendation struct {
 }
 
 type ListStatus struct {
-  u.DefaultListStatus
+  Status       string `json:"status"`
+  Score        int    `json:"score"`
+  StartDate    string `json:"start_date"`
+  FinishDate   string `json:"finish_date"`
+  Priority     int    `json:"priority"`
+  Tags         string `json:"tags"`
+  Comments     string `json:"comments"`
+  UpdatedAt    string `json:"updated_at"`
+
+  // these fields are exclusive to anime
   EpWatched      int  `json:"num_watched_episodes"`
   IsRewatching   bool `json:"is_rewatching"`
   TimesRewatched int  `json:"num_times_rewatched"`
@@ -68,16 +77,19 @@ type Anime struct {
   NumListUsers      int              `json:"num_list_users"`
   NumScoringUsers   int              `json:"num_scoring_users"`
   /* NsfwStatus potential values:
-   *  white = sfw
-   *  gray  = probably nsfw
-   *  black = nsfw */
+   * white = sfw
+   * gray  = probably nsfw
+   * black = nsfw */
   NsfwStatus        string           `json:"nsfw"`
   CreatedAt         string           `json:"created_at"`
   UpdatedAt         string           `json:"updated_at"`
   MediaType         string           `json:"media_type"`
   Status            string           `json:"status"`
-  Genres            []u.Genre          `json:"genres"`
+  Genres            []u.Genre        `json:"genres"`
+  /* MyListStatus refers to the authenticated user's info
+   * while ListStatus can be used for other users */
   MyListStatus      ListStatus       `json:"my_list_status"`
+  ListStatus        ListStatus       `json:"list_status"`
   NumEpisodes       int              `json:"num_episodes"`
   StartSeason       Season           `json:"start_season"`
   Broadcast         Broadcast        `json:"broadcast"`

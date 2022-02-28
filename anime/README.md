@@ -75,7 +75,7 @@ if err != nil {
   fmt.Println(err)
 }
 
-fmt.Println(anime.Title, anime.MeanScore, anime.MyListStatus.Status)
+fmt.Println(anime.Title, anime.MeanScore, anime.ListStatus.Status)
 ```
 
 - ### Get anime ranking

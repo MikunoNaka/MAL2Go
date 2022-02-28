@@ -27,7 +27,16 @@ type Author struct {
 }
 
 type ListStatus struct {
-  util.DefaultListStatus
+  Status       string `json:"status"`
+  Score        int    `json:"score"`
+  StartDate    string `json:"start_date"`
+  FinishDate   string `json:"finish_date"`
+  Priority     int    `json:"priority"`
+  Tags         string `json:"tags"`
+  Comments     string `json:"comments"`
+  UpdatedAt    string `json:"updated_at"`
+
+  // thsese fields are exclusive to manga
   VolumesRead  int  `json:"num_volumes_read"`
   ChaptersRead int  `json:"num_chapters_read"`
   IsRereading  bool `json:"is_rereading"`
@@ -53,7 +62,10 @@ type Manga struct {
   UpdatedAt     string         `json:"updated_at"`
   MediaType     string         `json:"media_type"`
   Status        string         `json:"status"`
-  MyListStattus ListStatus     `json:"my_list_status"`
+  /* MyListStatus refers to the authenticated user's info
+   * while ListStatus can be used for other users */
+  MyListStatus  ListStatus     `json:"my_list_status"`
+  ListStatus    ListStatus     `json:"list_status"`
   NumVolumes    int            `json:"num_volumes"`
   NumChapters   int            `json:"num_chapters"`
   Authors       []Author       `json:"authors"`
