@@ -121,7 +121,7 @@ func (c Client)SetRewatchValue(id int, rewatchValue int) (serverResponse, error)
 }
 
 // update just an anime's rewatch count
-func (c Client)UpdateRewatchCount(id int, rewatchCount int) (serverResponse, error) {
+func (c Client)SetRewatchCount(id int, rewatchCount int) (serverResponse, error) {
   endpoint := endpointGenerator(id)
 
   // data to be sent to the server

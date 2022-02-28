@@ -58,7 +58,7 @@ searchResults, err := myClient.SearchAnime(searchString, limit, offset, fields)
 fmt.Println(searchResults.Animes) // print list of the search results
 
 // results have page numbers
-fmt.Println(searchResults.ListPaging.NextPage, searchResults.ListPaging.PrevPage)
+fmt.Println(searchResults.Paging.NextPage, searchResults.Paging.PrevPage)
 ```
 
 - ### Getting an anime's info
@@ -162,7 +162,7 @@ for _, anime := range suggestedAnime.Animes {
   fmt.Println(anime.Titile)
 }
 
-fmt.Println(suggestedAnime.ListPaging.NextPage, suggestedAnime.ListPaging.PrevPage)
+fmt.Println(suggestedAnime.Paging.NextPage, suggestedAnime.Paging.PrevPage)
 ```
 
 ## Structure
