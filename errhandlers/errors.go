@@ -30,8 +30,6 @@ var InvalidSeasonError       error = errors.New("InvalidSeasonError: Invalid sea
 var InvalidSortError         error = errors.New("InvalidSortError: Invalid sort type specifield.")
 var InvalidStatusError       error = errors.New("InvalidStatusError: Invalid status specified.")
 
-var URLNameValueError        error = errors.New("URLNameValueError: Number of names and values passed to URLGenerator don't match.")
-
 var InvalidScoreError        error = errors.New("InvalidScoreError: Score should lie between 0-10.")
 var InvalidPriorityError     error = errors.New("InvalidPriorityError: Priority should lie between 0-2.")
 var InvalidRewatchValueError error = errors.New("InvalidRewatchValueError: Rewatch value should lie between 0-5.")
