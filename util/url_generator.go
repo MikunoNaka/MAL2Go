@@ -17,13 +17,13 @@
 package util
 
 import (
-  "errors"
+  e "github.com/MikunoNaka/MAL2Go/errhandlers"
 )
 
 func UrlGenerator(baseUrl string, names []string, values [][]string, isPrimary bool) (string, error) {
   // length of names and values should be same
   if cap(names) != cap(values) {
-    return "", errors.New("util.UrlGenerator: Error: Length of names and values don't match.")
+    return "", e.URLNameValueError
   }
 
   var fields string

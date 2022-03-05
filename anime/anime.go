@@ -18,7 +18,6 @@ package anime
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
@@ -88,8 +87,7 @@ func (c Client) GetAnimeById(animeId int, fields []string) (Anime, error) {
     BASE_URL + "/" + strconv.Itoa(animeId),
     []string{"fields"},
     /* it seems to still return all fields from the API. 
-     * this might be an issue with MAL itself
-     * TODO: look into this */
+     * this might be an issue with MAL itself */
     [][]string{fields},
     true,
   )
@@ -118,7 +116,7 @@ func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []
 
   // if ranking type is invalid
   if !e.IsValidRankingType(rankingType) {
-    return animeRanking, errors.New(fmt.Sprintf("GetAnimeRanking: Invalid ranking type specified: \"%s\"", rankingType))
+    return animeRanking, e.InvalidRankingError
   }
 
   endpoint, _ := u.UrlGenerator(
@@ -175,12 +173,12 @@ func (c Client) GetSeasonalAnime(year, season, sort string, limit, offset int, f
 
   // checks if valid season is specified
   if !e.IsValidSeason(season) {
-    return seasonalAnime, errors.New(fmt.Sprintf("GetSeasonalAnime: Invalid season specified: \"%s\"", season))
+    return seasonalAnime, e.InvalidSeasonError
   }
 
   // checks if valid sort is specified
   if !e.IsValidSeasonalSort(sort) {
-    return seasonalAnime, errors.New(fmt.Sprintf("GetSeasonalAnime: Invalid sort specified: \"%s\"", sort))
+    return seasonalAnime, e.InvalidSortError
   }
 
   endpoint, _ := u.UrlGenerator(

@@ -17,8 +17,6 @@
 package errhandlers
 
 import (
-  "errors"
-  "fmt"
   "github.com/MikunoNaka/MAL2Go/util"
 )
 
@@ -33,7 +31,7 @@ func FieldsErrHandler(fields []string) ([]string, error) {
   // checks if each given field is valid
   for _, j := range(fields) {
     if !IsValidField(j) {
-      return []string{}, errors.New(fmt.Sprintf("InvalidFieldError: Invalid field specified: \"%s\"", j))
+      return []string{}, InvalidFieldError
     }
   }
 
@@ -52,7 +50,7 @@ func MangaFieldsErrHandler(fields []string) ([]string, error) {
   // checks if each given field is valid
   for _, j := range(fields) {
     if !IsValidMangaField(j) {
-      return []string{}, errors.New(fmt.Sprintf("InvalidFieldError: Invalid field specified: \"%s\"", j))
+      return []string{}, InvalidFieldError
     }
   }
 
@@ -63,7 +61,14 @@ func MangaFieldsErrHandler(fields []string) ([]string, error) {
 // if limit or error specified are above the limit
 func LimitErrHandler(limit, maxLimit int) error {
   if limit > maxLimit {
-    return errors.New(fmt.Sprintf("InvalidLimitError: Limit specified too high (%d > %d).", limit, maxLimit))
+    switch maxLimit {
+    case 500:
+      return InvalidLimitError500
+    case 1000:
+      return InvalidLimitError500
+    default:
+      return InvalidLimitError
+    }
   } 
   // return nil if no error
   return nil

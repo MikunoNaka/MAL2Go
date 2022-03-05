@@ -20,7 +20,6 @@ import (
 	"encoding/json"
   "strconv"
   "fmt"
-  "errors"
   a "github.com/MikunoNaka/MAL2Go/anime"
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
   u "github.com/MikunoNaka/MAL2Go/util"
@@ -57,12 +56,12 @@ func (c Client) GetAnimeList(user, status, sort string, limit, offset int, field
 
   // checks if valid sort is specified
   if !e.IsValidListSort(sort) {
-    return userAnimeList, errors.New(fmt.Sprintf("GetAnimeList: Invalid sort specified: \"%s\"", sort))
+    return userAnimeList, e.InvalidSortError
   }
 
   // checks if valid status is specified
   if status != "" && !e.IsValidListStatus(status) {
-    return userAnimeList, errors.New(fmt.Sprintf("GetAnimeList: Invalid status specified: \"%s\"", status))
+    return userAnimeList, e.InvalidStatusError
   }
 
   // get own list if user not specified

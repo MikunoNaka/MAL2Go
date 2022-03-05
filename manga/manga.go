@@ -18,7 +18,6 @@ package manga
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
@@ -115,7 +114,7 @@ func (c Client) GetMangaRanking(rankingType string, limit, offset int, fields []
 
   // if ranking type is invalid
   if !e.IsValidMangaRankingType(rankingType) {
-    return mangaRanking, errors.New(fmt.Sprintf("GetMangaRanking: Invalid ranking type specified: \"%s\"", rankingType))
+    return mangaRanking, e.InvalidRankingError
   }
 
   endpoint, _ := u.UrlGenerator(

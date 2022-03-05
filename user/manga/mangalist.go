@@ -20,7 +20,6 @@ import (
 	"encoding/json"
   "strconv"
   "fmt"
-  "errors"
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
   u "github.com/MikunoNaka/MAL2Go/util"
 )
@@ -56,12 +55,12 @@ func (c Client) GetMangaList(user, status, sort string, limit, offset int, field
 
   // checks if valid sort is specified
   if !e.IsValidMangaListSort(sort) {
-    return userMangaList, errors.New(fmt.Sprintf("GetMangaList: Invalid sort specified: \"%s\"", sort))
+    return userMangaList, e.InvalidSortError
   }
 
   // checks if valid status is specified
   if status != "" && !e.IsValidMangaListStatus(status) {
-    return userMangaList, errors.New(fmt.Sprintf("GetMangaList: Invalid status specified: \"%s\"", status))
+    return userMangaList, e.InvalidStatusError
   }
 
   // get own list if user not specified

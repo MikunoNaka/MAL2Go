@@ -17,7 +17,6 @@ package anime
 
 import (
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
-  "errors"
   "fmt"
 	"net/url"
 	"strconv"
@@ -34,7 +33,7 @@ func (c Client)SetStatus(id int, status string) (serverResponse, error) {
 
   // checks if specified list status is valid
   if !e.IsValidListStatus(status) {
-    return serverResponse{}, errors.New(fmt.Sprintf("SetStatus: Invalid list status: \"%s\"", status))
+    return serverResponse{}, e.InvalidStatusError
   }
 
   // data to be sent to the server
@@ -75,7 +74,7 @@ func (c Client)SetScore(id int, score int) (serverResponse, error) {
 
   // checks if specified score is valid
   if !e.IsValidScore(score) {
-    return serverResponse{}, errors.New(fmt.Sprintf("SetScore: Invalid score: %d doesn't lie within 0-10", score))
+    return serverResponse{}, e.InvalidScoreError
   }
 
   // data to be sent to the server
@@ -92,7 +91,7 @@ func (c Client)SetPriority(id int, priority int) (serverResponse, error) {
 
   // checks if specified priority is valid
   if !e.IsValidPriority(priority) {
-    return serverResponse{}, errors.New(fmt.Sprintf("SetPriority: Invalid priority: %d doesn't lie within 0-2", priority))
+    return serverResponse{}, e.InvalidPriorityError
   }
 
   // data to be sent to the server
@@ -109,7 +108,7 @@ func (c Client)SetRewatchValue(id int, rewatchValue int) (serverResponse, error)
 
   // checks if specified rewatch value is valid
   if !e.IsValidRewatchValue(rewatchValue) {
-    return serverResponse{}, errors.New(fmt.Sprintf("SetRewatchValue: Invalid rewatch value: %d doesn't lie within 0-5", rewatchValue))
+    return serverResponse{}, e.InvalidRewatchValueError
   }
 
   // data to be sent to the server
@@ -165,22 +164,22 @@ func (c Client)UpdateAnime(id int, data UpdateAnimeData) (serverResponse, error)
 
   // checks if specified list status is valid
   if !e.IsValidListStatus(data.Status) {
-    return serverResponse{}, errors.New(fmt.Sprintf("UpdateAnime: Invalid list status: \"%s\"", data.Status))
+    return serverResponse{}, e.InvalidStatusError
   }
 
   // checks if specified score is valid
   if !e.IsValidScore(data.Score) {
-    return serverResponse{}, errors.New(fmt.Sprintf("UpdateAnime: Invalid score: %d doesn't lie within 0-10", data.Score))
+    return serverResponse{}, e.InvalidScoreError
   }
 
   // checks if specified priority is valid
   if !e.IsValidPriority(data.Priority) {
-    return serverResponse{}, errors.New(fmt.Sprintf("UpdateAnime: Invalid priority: %d doesn't lie within 0-2", data.Priority))
+    return serverResponse{}, e.InvalidPriorityError
   }
 
   // checks if specified rewatch value is valid
   if !e.IsValidRewatchValue(data.RewatchValue) {
-    return serverResponse{}, errors.New(fmt.Sprintf("UpdateAnime: Invalid rewatch value: %d doesn't lie within 0-5", data.RewatchValue))
+    return serverResponse{}, e.InvalidRereadValueError
   }
 
   params := url.Values{}
