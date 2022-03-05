@@ -18,7 +18,6 @@ package manga
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
   u "github.com/MikunoNaka/MAL2Go/util"
