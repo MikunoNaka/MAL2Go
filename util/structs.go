@@ -64,6 +64,7 @@ type Picture struct {
   Large  string `json:"large"`
 }
 
+// for some reason the API returns them as string
 type StatusStatistics struct {
   Watching    string `json:"watching"` 
   Completed   string `json:"completed"`

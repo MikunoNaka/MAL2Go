@@ -21,8 +21,8 @@ import (
 )
 
 type AnimeStatistics struct {
+  NumListUsers int                `json:"num_list_users"`
   Status       u.StatusStatistics `json:"status"`
-  NumListUsers int              `json:"num_list_users"`
 }
 
 type Broadcast struct {
@@ -57,7 +57,7 @@ type ListStatus struct {
   UpdatedAt    string `json:"updated_at"`
 
   // these fields are exclusive to anime
-  EpWatched      int  `json:"num_watched_episodes"`
+  EpWatched      int  `json:"num_episodes_watched"`
   IsRewatching   bool `json:"is_rewatching"`
   TimesRewatched int  `json:"num_times_rewatched"`
   RewatchValue   int  `json:"rewatch_value"`
@@ -67,7 +67,7 @@ type Anime struct {
   Id                int              `json:"id"`
   Title             string           `json:"title"`
   MainPicture       u.Picture        `json:"main_picture"`
-  AltTitles         u.AltTitles        `json:"alternative_titles"`
+  AltTitles         u.AltTitles      `json:"alternative_titles"`
   StartDate         string           `json:"start_date"`
   EndDate           string           `json:"end_date"`
   Synopsis          string           `json:"synopsis"`
