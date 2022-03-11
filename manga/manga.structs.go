@@ -45,17 +45,17 @@ type ListStatus struct {
 }
 
 type Manga struct {
-  Id            int             `json:"id"`
-  Title         string          `json:"title"`
-  MainPicture   util.Picture    `json:"main_picture"`
-  AltTitles     util.AltTitles  `json:"alternative_titles"`
-  StartDate     string          `json:"start_date"`
-  EndDate       string          `json:"end_date"`
-  Synopsis      string          `json:"synopsis"`
-  MeanScore     float32         `json:"mean"`
-  Rank          int             `json:"rank"`
-  Popularity    int             `json:"popularity"` 
-  NumListUsers  int             `json:"num_list_users"`
+  Id            int            `json:"id"`
+  Title         string         `json:"title"`
+  MainPicture   util.Picture   `json:"main_picture"`
+  AltTitles     util.AltTitles `json:"alternative_titles"`
+  StartDate     string         `json:"start_date"`
+  EndDate       string         `json:"end_date"`
+  Synopsis      string         `json:"synopsis"`
+  MeanScore     float32        `json:"mean"`
+  Rank          int            `json:"rank"`
+  Popularity    int            `json:"popularity"` 
+  NumListUsers  int            `json:"num_list_users"`
   NsfwStatus    string         `json:"nsfw"`
   Genres        []util.Genre   `json:"genres"`
   CreatedAt     string         `json:"created_at"`

@@ -214,7 +214,8 @@ func (c Client) GetSuggestedAnime(limit, offset int, fields []string) (Suggested
   var suggestedAnime SuggestedAnime
 
   // error handling for limit
-  limitErr := e.LimitErrHandler(limit, maxAnimeLimit)
+  // limit for this is 100 unlike others in the current package
+  limitErr := e.LimitErrHandler(limit, 100)
   if limitErr != nil {
     return suggestedAnime, limitErr
   }
