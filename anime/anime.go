@@ -17,24 +17,21 @@
 package anime
 
 import (
-	"encoding/json"
-	"fmt"
-	"strconv"
+  "encoding/json"
+  "fmt"
+  "strconv"
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
   u "github.com/MikunoNaka/MAL2Go/util"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2/anime"
 
-// MAL Might change this
-const maxAnimeLimit int = 500
-
 // in MAL documentation this is named Get Anime List
 func (c Client) SearchAnime(searchString string, limit, offset int, fields []string) ([]Anime, error) {
   var searchResults []Anime
 
   // error handling for limit
-  limitErr := e.LimitErrHandler(limit, maxAnimeLimit)
+  limitErr := e.LimitErrHandler(limit, 100)
   if limitErr != nil {
     return searchResults, limitErr
   }
@@ -55,7 +52,10 @@ func (c Client) SearchAnime(searchString string, limit, offset int, fields []str
 
   // gets data from API and stores it in a struct
   var animeSearchData AnimeSearchRaw
-  data := c.requestHandler(endpoint)
+  data, err := c.requestHandler(endpoint)
+  if err != nil {
+    return searchResults, err
+  }
   json.Unmarshal([]byte(data), &animeSearchData)
 
   // Adding all the animes to another list to get formatted results later
@@ -85,7 +85,10 @@ func (c Client) GetAnimeById(animeId int, fields []string) (Anime, error) {
     true,
   )
 
-  data := c.requestHandler(endpoint)
+  data, err := c.requestHandler(endpoint)
+  if err != nil {
+    return anime, err
+  }
   json.Unmarshal([]byte(data), &anime)
 
   return anime, nil
@@ -96,7 +99,7 @@ func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []
   var animeRanking []rAnime
 
   // error handling for limit
-  limitErr := e.LimitErrHandler(limit, maxAnimeLimit)
+  limitErr := e.LimitErrHandler(limit, 500)
   if limitErr != nil {
     return animeRanking, limitErr
   }
@@ -121,7 +124,10 @@ func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []
 
   // gets data from API and stores it in a struct
   var rankingData RawRanking
-  data := c.requestHandler(endpoint)
+  data, err := c.requestHandler(endpoint)
+  if err != nil {
+    return animeRanking, err
+  }
   json.Unmarshal([]byte(data), &rankingData)
 
   // Adding all the animes in ranking list to a slice
@@ -141,7 +147,7 @@ func (c Client) GetSeasonalAnime(year, season, sort string, limit, offset int, f
   var seasonalAnime SeasonalAnime
 
   // error handling for limit
-  limitErr := e.LimitErrHandler(limit, maxAnimeLimit)
+  limitErr := e.LimitErrHandler(limit, 500)
   if limitErr != nil {
     return seasonalAnime, limitErr
   }
@@ -171,7 +177,10 @@ func (c Client) GetSeasonalAnime(year, season, sort string, limit, offset int, f
 
   // gets data from API and stores it in a struct
   var seasonalAnimeData SeasonalAnimeRaw
-  data := c.requestHandler(endpoint)
+  data, err := c.requestHandler(endpoint)
+  if err != nil {
+    return seasonalAnime, err
+  }
   json.Unmarshal([]byte(data), &seasonalAnimeData)
 
   // Adding all the animes to another list to get formatted results later
@@ -215,7 +224,10 @@ func (c Client) GetSuggestedAnime(limit, offset int, fields []string) ([]Anime, 
 
   // gets data from API and stores it in a struct
   var suggestedAnimeData SuggestedAnimeRaw
-  data := c.requestHandler(endpoint)
+  data, err := c.requestHandler(endpoint)
+  if err != nil {
+    return suggestedAnime, err
+  }
   json.Unmarshal([]byte(data), &suggestedAnimeData)
 
   // Adding all the animes to another list to get formatted results later

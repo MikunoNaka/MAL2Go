@@ -30,14 +30,12 @@ func (c Client) GetSelfUserInfo() (UserInfo, error) {
   
   // get data from API
   var userData UserInfo
-  var errMessage Error
-  data := c.requestHandler(endpoint)
-  json.Unmarshal([]byte(data), &userData)
-  json.Unmarshal([]byte(data), &errMessage)
-
-  if errMessage.Err != "" {
-    return userData, errors.New(errMessage.Err + " " + errMessage.Msg)
+  data, err := c.requestHandler(endpoint)
+  if err != nil {
+    return userData, err
   }
+
+  json.Unmarshal([]byte(data), &userData)
 
   return userData, nil
 }

@@ -51,7 +51,10 @@ func (c Client) SearchManga(searchString string, limit, offset int, fields []str
 
   // gets data from API and stores it in a struct
   var mangaSearchData MangaSearchRaw
-  data := c.requestHandler(endpoint)
+  data, err := c.requestHandler(endpoint)
+  if err != nil {
+    return searchResults, err
+  }
   json.Unmarshal([]byte(data), &mangaSearchData)
 
   for _, element := range mangaSearchData.Data {
@@ -78,7 +81,10 @@ func (c Client) GetMangaById(mangaId int, fields []string) (Manga, error) {
     true,
   )
 
-  data := c.requestHandler(endpoint)
+  data, err := c.requestHandler(endpoint)
+  if err != nil {
+    return manga, err
+  }
   json.Unmarshal([]byte(data), &manga)
 
   return manga, nil
@@ -114,7 +120,10 @@ func (c Client) GetMangaRanking(rankingType string, limit, offset int, fields []
 
   // gets data from API and stores it in a struct
   var rankingData RawRanking
-  data := c.requestHandler(endpoint)
+  data, err := c.requestHandler(endpoint)
+  if err != nil {
+    return mangaRanking, err
+  }
   json.Unmarshal([]byte(data), &rankingData)
 
   // Adding all the mangas in ranking list to a slice
@@ -123,7 +132,7 @@ func (c Client) GetMangaRanking(rankingType string, limit, offset int, fields []
     m := manga.Manga
     m.RankNum = manga.Ranking.Rank
 
-    // add newManga to list
+    // add manga to list
     mangaRanking = append(mangaRanking, m)
   }
 

@@ -17,13 +17,16 @@
 package user
 
 import (
-	"io/ioutil"
-	"log"
-	"net/http"
+  "io/ioutil"
+  "log"
+  "net/http"
+  "github.com/MikunoNaka/MAL2Go/util"
+  "errors"
+  "encoding/json"
 )
 
 // Handles HTTP request with your OAuth token as a Header
-func (c Client) requestHandler(endpoint string) string {
+func (c Client) requestHandler(endpoint string) (string, error) {
   // generate request
   req, err := http.NewRequest("GET", endpoint, nil)
   if err != nil {
@@ -44,5 +47,13 @@ func (c Client) requestHandler(endpoint string) string {
       log.Fatal(err)
   }
 
-  return string(body)
+  // error handling (if API returns error)
+  var errMsg util.APIError
+  json.Unmarshal(body, &errMsg)
+
+  if errMsg.Err != "" {
+    return string(body), errors.New(errMsg.Err + " " + errMsg.Msg)
+  }
+
+  return string(body), nil
 }

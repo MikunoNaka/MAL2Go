@@ -48,23 +48,18 @@ var DefaultMangaFields []string = []string{
   "related_manga", "recommendations", "serialization",
 }
 
-// contains previous/next page for anime list
-// we don't actually need this.
-// TODO: for compatibility's sake, keep this but also define methods
-// to get the prev. and next page's elements automatically
-type ListPaging struct {
-  NextPage string `json:"next"`
-  PrevPage string `json:"previous"`
+type APIError struct {
+  Err string `json:"error"`
+  Msg string `json:"message"`
 }
 
-/* these structs are used 
+/* these structs are used
  * both by anime and manga package */
 type Picture struct {
   Medium string `json:"medium"`
   Large  string `json:"large"`
 }
 
-// for some reason the API returns them as string
 type StatusStatistics struct {
   Watching    string `json:"watching"` 
   Completed   string `json:"completed"`
