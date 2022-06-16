@@ -35,7 +35,7 @@ func (c Client) GetSelfUserInfo() (UserInfo, error) {
   json.Unmarshal([]byte(data), &userData)
   json.Unmarshal([]byte(data), &errMessage)
 
-  if errMessage.Err != nil {
+  if errMessage.Err != "" {
     return userData, errors.New(errMessage.Err + " " + errMessage.Msg)
   }
 
