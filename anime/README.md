@@ -164,12 +164,8 @@ Contains all the structs representing an anime entry on MyAnimeList.
 - [client.go](client.go)
 The Client for accessing the API with this package.
 
-- [general.structs.go](general.structs.go)
-Some structs that can't particularly be grouped with another file.
-
 - [ranking.structs.go](ranking.structs.go)
-Representing anime ranking data both in the form returned by the API and
-the formatted form to be returned by this package.
+Representing anime ranking data both in the form returned by the API and the formatted form to be returned by this package.
 
 - [request_handler.go](request_handler.go)
 Responsible for making HTTP requests
