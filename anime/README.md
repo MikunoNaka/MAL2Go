@@ -56,9 +56,6 @@ fields := []string{
 searchResults, err := myClient.SearchAnime(searchString, limit, offset, fields)
 
 fmt.Println(searchResults.Animes) // print list of the search results
-
-// results have page numbers
-fmt.Println(searchResults.Paging.NextPage, searchResults.Paging.PrevPage)
 ```
 
 - ### Getting an anime's info
@@ -103,9 +100,6 @@ ranking, err := myClient.GetAnimeRanking(rankingType, limit, offset, fields)
 for _, anime := range ranking.Animes {
   fmt.Printf("Title: %s, Rank Number: %d", anime.Title, anime.RankNum)
 }
-
-// ranking lists have page numbers
-fmt.Println(ranking.Paging.NextPage, ranking.Paging.PrevPage)
 ```
 
 - ### Get seasonal anime
@@ -140,7 +134,6 @@ for _, anime := range seasonalAnime.Animes {
 }
 
 fmt.Println(seaonalAnime.Season)
-fmt.Println(seasonalAnime.Paging.NextPage, seasonalAnime.Paging.PrevPage)
 ```
 
 - ### Get suggested anime
@@ -159,7 +152,6 @@ for _, anime := range suggestedAnime.Animes {
   fmt.Println(anime.Titile)
 }
 
-fmt.Println(suggestedAnime.Paging.NextPage, suggestedAnime.Paging.PrevPage)
 ```
 
 ## Structure

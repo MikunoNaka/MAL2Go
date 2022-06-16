@@ -21,11 +21,4 @@ type SuggestedAnimeRaw struct {
   Data []struct {
     Anime Anime `json:"node"`
   } `json:"data"`
-  Paging ListPaging `json:"paging"`
-}
-
-// this is how mal2go returns data
-type SuggestedAnime struct {
-  Animes []Anime
-  Paging ListPaging
 }

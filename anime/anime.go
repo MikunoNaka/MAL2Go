@@ -30,8 +30,8 @@ const BASE_URL string = "https://api.myanimelist.net/v2/anime"
 const maxAnimeLimit int = 500
 
 // in MAL documentation this is named Get Anime List
-func (c Client) SearchAnime(searchString string, limit, offset int, fields []string) (AnimeSearch, error) {
-  var searchResults AnimeSearch
+func (c Client) SearchAnime(searchString string, limit, offset int, fields []string) ([]Anime, error) {
+  var searchResults []Anime
 
   // error handling for limit
   limitErr := e.LimitErrHandler(limit, maxAnimeLimit)
@@ -59,16 +59,9 @@ func (c Client) SearchAnime(searchString string, limit, offset int, fields []str
   json.Unmarshal([]byte(data), &animeSearchData)
 
   // Adding all the animes to another list to get formatted results later
-  var animes []Anime
-  for _, element := range animeSearchData.Data { 
-    animes = append(animes, element.Anime) 
+  for _, element := range animeSearchData.Data {
+    searchResults = append(searchResults, element.Anime)
   } 
-
-  // finally generate AnimeList 
-  searchResults = AnimeSearch {
-    Animes: animes,
-    Paging: animeSearchData.Paging,
-  }
 
   return searchResults, nil
 }
@@ -99,8 +92,8 @@ func (c Client) GetAnimeById(animeId int, fields []string) (Anime, error) {
 }
 
 // Ranking is a list of anime sorted by their rank
-func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []string) (AnimeRanking, error) {
-  var animeRanking AnimeRanking
+func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []string) ([]rAnime, error) {
+  var animeRanking []rAnime
 
   // error handling for limit
   limitErr := e.LimitErrHandler(limit, maxAnimeLimit)
@@ -132,24 +125,12 @@ func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []
   json.Unmarshal([]byte(data), &rankingData)
 
   // Adding all the animes in ranking list to a slice
-  var animes []rAnime
-
   for _, anime := range rankingData.Data {
     // set RankNum for anime
-    newManga := anime.Anime
-    newManga.RankNum = anime.Ranking.Rank
-
-    // add newManga to list
-    animes = append(animes, newManga)
-  }
-
-  // Finally, create the AnimeRanking object
-  animeRanking = AnimeRanking {
-    Animes: animes,
-    Paging: ListPaging {
-      NextPage: rankingData.Paging.NextPage,
-      PrevPage: rankingData.Paging.PrevPage,
-    },
+    a := anime.Anime
+    a.RankNum = anime.Ranking.Rank
+    // add anime to slice
+    animeRanking = append(animeRanking, a)
   }
 
   return animeRanking, nil
@@ -202,7 +183,6 @@ func (c Client) GetSeasonalAnime(year, season, sort string, limit, offset int, f
   // finally generate SeasonalAnime
   seasonalAnime = SeasonalAnime {
     Animes: animes,
-    Paging: seasonalAnimeData.Paging,
     Season: seasonalAnimeData.Season,
   }
 
@@ -210,8 +190,8 @@ func (c Client) GetSeasonalAnime(year, season, sort string, limit, offset int, f
 }
 
 // get anime suggestions for the user
-func (c Client) GetSuggestedAnime(limit, offset int, fields []string) (SuggestedAnime, error){
-  var suggestedAnime SuggestedAnime
+func (c Client) GetSuggestedAnime(limit, offset int, fields []string) ([]Anime, error){
+  var suggestedAnime []Anime
 
   // error handling for limit
   // limit for this is 100 unlike others in the current package
@@ -239,15 +219,8 @@ func (c Client) GetSuggestedAnime(limit, offset int, fields []string) (Suggested
   json.Unmarshal([]byte(data), &suggestedAnimeData)
 
   // Adding all the animes to another list to get formatted results later
-  var animes []Anime
   for _, element := range suggestedAnimeData.Data {
-    animes = append(animes, element.Anime)
-  }
-
-  // finally generate RecommendedAnime struct
-  suggestedAnime = SuggestedAnime {
-    Animes: animes,
-    Paging: suggestedAnimeData.Paging,
+    suggestedAnime = append(suggestedAnime, element.Anime)
   }
 
   return suggestedAnime, nil

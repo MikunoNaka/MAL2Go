@@ -16,17 +16,8 @@
 
 package anime
 
-// this is how the API returns data (looks horrible)
 type AnimeSearchRaw struct {
   Data []struct {
     Anime Anime `json:"node"`
   } `json:"data"`
-
-  Paging ListPaging `json:"paging"`
-}
-
-// this is how mal2go returns data
-type AnimeSearch struct {
-  Animes []Anime
-  Paging ListPaging
 }

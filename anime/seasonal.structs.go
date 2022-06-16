@@ -21,14 +21,16 @@ type SeasonalAnimeRaw struct {
   Data []struct {
     Anime Anime `json:"node"`
   } `json:"data"`
-
-  Paging ListPaging `json:"paging"`
   Season Season     `json:"season"`
 }
 
 // this is how mal2go returns data
 type SeasonalAnime struct {
   Animes []Anime
-  Paging ListPaging
   Season Season
+}
+
+type Season struct {
+  Year int    `json:"year"`
+  Name string `json:"season"`
 }
