@@ -18,19 +18,26 @@ package user
 
 import (
   "encoding/json"
+  "errors"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2/users"
 
 // Get info of logged in user
-func (c Client) GetSelfUserInfo() UserInfo {
+func (c Client) GetSelfUserInfo() (UserInfo, error) {
   /* MAL only supports @me for this */
   endpoint := BASE_URL + "/@me?fields=anime_statistics"
   
   // get data from API
   var userData UserInfo
+  var errMessage Error
   data := c.requestHandler(endpoint)
   json.Unmarshal([]byte(data), &userData)
+  json.Unmarshal([]byte(data), &errMessage)
 
-  return userData
+  if errMessage.Err != nil {
+    return userData, errors.New(errMessage.Err + " " + errMessage.Msg)
+  }
+
+  return userData, nil
 }

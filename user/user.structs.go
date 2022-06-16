@@ -28,3 +28,8 @@ type UserInfo struct {
   TimeZone    string `json:"time_zone"`
   IsSupporter bool   `json:"is_supporter"`
 }
+
+type Error struct {
+  Err string `json:"error"`
+  Msg string `json:"message"`
+}
