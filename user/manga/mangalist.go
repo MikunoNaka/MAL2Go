@@ -17,18 +17,19 @@
 package manga
 
 import (
-	"encoding/json"
+  "encoding/json"
   "strconv"
   "fmt"
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
   u "github.com/MikunoNaka/MAL2Go/util"
+  m "github.com/MikunoNaka/MAL2Go/manga"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2"
 const maxListLimit int = 1000
 
 // Delete a manga from user's manga list
-func (c Client)DeleteManga(id int) string {
+func (c Client)DeleteManga(id int) (string, error) {
   endpoint := fmt.Sprintf("%s/manga/%d/my_list_status", BASE_URL, id)
   /* Returns 200 if manga successfully deleted
    * Alternatively returns 404 if manga not in user's manga list */
@@ -36,18 +37,19 @@ func (c Client)DeleteManga(id int) string {
 }
 
 // Get authenticated user's manga list
-func (c Client) GetMangaList(user, status, sort string, limit, offset int, fields []string) (MangaList, error){
-  var userMangaList MangaList
+// returns true as second value if there are more mangas present
+func (c Client) GetMangaList(user, status, sort string, limit, offset int, fields []string) ([]m.Manga, bool, error){
+  var userMangaList []m.Manga
   // error handling for limit
   limitErr := e.LimitErrHandler(limit, maxListLimit)
   if limitErr != nil { 
-    return userMangaList, limitErr
+    return userMangaList, false, limitErr
   }
 
   // handle all the errors for the fields
   fields, err := e.FieldsErrHandler(fields)
   if err != nil {
-    return userMangaList, err
+    return userMangaList, false, err
   }
 
   // append "list_status" field only used by this func.
@@ -55,12 +57,12 @@ func (c Client) GetMangaList(user, status, sort string, limit, offset int, field
 
   // checks if valid sort is specified
   if !e.IsValidMangaListSort(sort) {
-    return userMangaList, e.InvalidSortError
+    return userMangaList, false, e.InvalidSortError
   }
 
   // checks if valid status is specified
   if status != "" && !e.IsValidMangaListStatus(status) {
-    return userMangaList, e.InvalidStatusError
+    return userMangaList, false, e.InvalidStatusError
   }
 
   // get own list if user not specified
@@ -88,25 +90,23 @@ func (c Client) GetMangaList(user, status, sort string, limit, offset int, field
   }
 
   // get data from API
-  var mangaListData MangaListRaw
-  data := c.requestHandler(endpoint, "GET")
+  var mangaListData mangaListRaw
+  data, err := c.requestHandler(endpoint, "GET")
+  if err != nil {
+    return userMangaList, false, err
+  }
   json.Unmarshal([]byte(data), &mangaListData)
 
-  // set MyListStatus for each element and add it to array
-  var mangas []Manga
+  nextPageExists := mangaListData.Paging.NextPage != ""
+
+  // set MyListStatus for each element and add it to slice
   for _, element := range mangaListData.Data {
-    a := element.Manga
-    a.ListStatus = element.ListStatus
+    m := element.Manga
+    m.ListStatus = element.ListStatus
 
-    mangas = append(mangas, a)
+    userMangaList = append(userMangaList, m)
   }
 
-  // finally create AnimeList
-  userMangaList = MangaList {
-    Mangas: mangas,
-    Paging: mangaListData.Paging,
-  }
-
-  return userMangaList, nil
+  return userMangaList, nextPageExists, nil
 }
 

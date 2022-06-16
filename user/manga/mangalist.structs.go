@@ -17,23 +17,18 @@
 package manga
 
 import (
-  "github.com/MikunoNaka/MAL2Go/util"
   "github.com/MikunoNaka/MAL2Go/manga"
 )
 
-type Manga manga.Manga
-
-type MangaListRaw struct {
+type mangaListRaw struct {
   Data []struct {
-    Manga      Manga      `json:"node"`
+    Manga      manga.Manga      `json:"node"`
     ListStatus manga.ListStatus `json:"list_status"`
-  }  `json:"data"`
-  Paging util.ListPaging `json:"paging"`
-}
-
-type MangaList struct {
-  Mangas []Manga
-  Paging util.ListPaging
+  } `json:"data"`
+  Paging struct {
+    NextPage string `json:"next"`
+    PrevPage string `json:"previous"`
+  } `json:"paging"`
 }
 
 type UpdateMangaData struct {
@@ -44,7 +39,6 @@ type UpdateMangaData struct {
   ChaptersRead   int
   Priority       int
   TimesReread    int
-  // NOTE: idk what RereadValue is
   RereadValue    int
   Tags           string
   Comments       string

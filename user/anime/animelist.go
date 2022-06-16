@@ -17,7 +17,7 @@
 package anime
 
 import (
-	"encoding/json"
+  "encoding/json"
   "strconv"
   "fmt"
   a "github.com/MikunoNaka/MAL2Go/anime"
@@ -29,7 +29,7 @@ const BASE_URL string = "https://api.myanimelist.net/v2"
 const maxListLimit int = 1000
 
 // Delete an anime from user's anime list
-func (c Client)DeleteAnime(id int) string {
+func (c Client)DeleteAnime(id int) (string, error) {
   endpoint := fmt.Sprintf("%s/anime/%d/my_list_status", BASE_URL, id)
   /* Returns 200 if anime successfully deleted
    * Alternatively returns 404 if anime not in user's anime list */
@@ -37,18 +37,19 @@ func (c Client)DeleteAnime(id int) string {
 }
 
 // Get authenticated user's anime list
-func (c Client) GetAnimeList(user, status, sort string, limit, offset int, fields []string) (a.AnimeList, error){
-  var userAnimeList a.AnimeList
+// returns true as second value if there are more animes present
+func (c Client) GetAnimeList(user, status, sort string, limit, offset int, fields []string) ([]a.Anime, bool, error){
+  var userAnimeList []a.Anime
   // error handling for limit
   limitErr := e.LimitErrHandler(limit, maxListLimit)
   if limitErr != nil { 
-    return userAnimeList, limitErr
+    return userAnimeList, false, limitErr
   }
 
   // handle all the errors for the fields
   fields, err := e.FieldsErrHandler(fields)
   if err != nil {
-    return userAnimeList, err
+    return userAnimeList, false, err
   }
 
   // append "list_status" field only used by this func.
@@ -56,12 +57,12 @@ func (c Client) GetAnimeList(user, status, sort string, limit, offset int, field
 
   // checks if valid sort is specified
   if !e.IsValidListSort(sort) {
-    return userAnimeList, e.InvalidSortError
+    return userAnimeList, false, e.InvalidSortError
   }
 
   // checks if valid status is specified
   if status != "" && !e.IsValidListStatus(status) {
-    return userAnimeList, e.InvalidStatusError
+    return userAnimeList, false, e.InvalidStatusError
   }
 
   // get own list if user not specified
@@ -88,27 +89,24 @@ func (c Client) GetAnimeList(user, status, sort string, limit, offset int, field
     )
   }
 
-
   // get data from API
-  var animeListData AnimeListRaw
-  data := c.requestHandler(endpoint, "GET")
+  var animeListData animeListRaw
+  data, err := c.requestHandler(endpoint, "GET")
+  if err != nil {
+    return userAnimeList, false, err
+  }
   json.Unmarshal([]byte(data), &animeListData)
 
+  nextPageExists := animeListData.Paging.NextPage != ""
+
   // set ListStatus for each element and add it to array
-  var animes []a.Anime
   for _, element := range animeListData.Data {
-    anime := element.Anime
-    anime.ListStatus = element.ListStatus
+    a := element.Anime
+    a.ListStatus = element.ListStatus
 
-    animes = append(animes, anime)
+    userAnimeList = append(userAnimeList, a)
   }
 
-  // finally create AnimeList
-  userAnimeList = a.AnimeList {
-    Animes: animes,
-    Paging: animeListData.Paging,
-  }
-
-  return userAnimeList, nil
+  return userAnimeList, nextPageExists, nil
 }
 

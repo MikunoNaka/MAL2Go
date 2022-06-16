@@ -16,22 +16,32 @@
 package manga
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"net/url"
-	"strconv"
-	"strings"
+  "encoding/json"
+  "io/ioutil"
+  "log"
+  "net/http"
+  "net/url"
+  "strconv"
+  "strings"
+  "errors"
+  "github.com/MikunoNaka/MAL2Go/util"
 )
 
-type serverResponse struct {
-  Message string
-  Error string
+type UpdateResponse struct {
+  Status         string `json:"status"`
+  Score          int    `json:"score"`
+  VolumesRead    int    `json:"num_volumes_read"`
+  ChaptersRead   int    `json:"num_chapters_read"`
+  IsRereading    bool   `json:"is_rereading"`
+  Priority       string `json:"priority"`
+  TimesReread    string `json:"num_times_reread"`
+  RereadValue    string `json:"reread_value"`
+  Tags           string `json:"tags"`
+  Comments       string `json:"string"`
 }
 
 // Handles HTTP request with your OAuth token as a Header
-func (c Client) requestHandler(endpoint, method string) string {
+func (c Client) requestHandler(endpoint, method string) (string, error) {
   // generate request
   req, err := http.NewRequest(method, endpoint, nil)
   if err != nil {
@@ -52,16 +62,23 @@ func (c Client) requestHandler(endpoint, method string) string {
       log.Fatal(err)
   }
 
-  // for DeleteAnime, its endpoint returns null data
-  if method == "DELETE" {
-    return strconv.Itoa(res.StatusCode)
+  // error handling (if API returns error)
+  var errMsg util.APIError
+  json.Unmarshal(body, &errMsg)
+  if errMsg.Err != "" {
+    return string(body), errors.New(errMsg.Err + " " + errMsg.Msg)
   }
 
-  return string(body)
+  // for DeleteAnime, its endpoint returns null data
+  if method == "DELETE" {
+    return strconv.Itoa(res.StatusCode), nil
+  }
+
+  return string(body), nil
 }
 
 // for PUT requests (used for updating anime)
-func (c Client) putRequestHandler(endpoint string, params url.Values) serverResponse {
+func (c Client) putRequestHandler(endpoint string, params url.Values) (UpdateResponse, error) {
   paramsEncoded := params.Encode()
 
   // generate request
@@ -87,10 +104,15 @@ func (c Client) putRequestHandler(endpoint string, params url.Values) serverResp
       log.Fatal(err)
   }
 
-  // TODO: there are other serverResponses. Add them
-  // server response, ie message / error
-  var resp serverResponse
+  // error handling (if API returns error)
+  var errMsg util.APIError
+  json.Unmarshal(body, &errMsg)
+  if errMsg.Err != "" {
+    return UpdateResponse{}, errors.New(errMsg.Err + " " + errMsg.Msg)
+  }
+
+  var resp UpdateResponse
   json.Unmarshal(body, &resp)
 
-  return resp
+  return resp, nil
 }

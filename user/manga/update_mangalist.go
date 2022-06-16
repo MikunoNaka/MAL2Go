@@ -18,8 +18,8 @@ package manga
 import (
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
   "fmt"
-	"net/url"
-	"strconv"
+  "net/url"
+  "strconv"
 )
 
 // generate the endpoint url with the manga id
@@ -28,12 +28,12 @@ func endpointGenerator(id int) string {
 }
 
 // update just an manga's status
-func (c Client)SetStatus(id int, status string) (serverResponse, error) {
+func (c Client)SetStatus(id int, status string) (UpdateResponse, error) {
   endpoint := endpointGenerator(id)
 
   // checks if specified list status is valid
   if !e.IsValidMangaListStatus(status) {
-    return serverResponse{}, e.InvalidStatusError
+    return UpdateResponse{}, e.InvalidStatusError
   }
 
   // data to be sent to the server
@@ -41,11 +41,11 @@ func (c Client)SetStatus(id int, status string) (serverResponse, error) {
   params.Set("status", status)
 
   // make API request
-  return c.putRequestHandler(endpoint, params), nil
+  return c.putRequestHandler(endpoint, params)
 }
 
 // update just a manga's num of volumes read
-func (c Client)SetVolumesRead(id int, volumes int) (serverResponse, error) {
+func (c Client)SetVolumesRead(id int, volumes int) (UpdateResponse, error) {
   endpoint := endpointGenerator(id)
 
   // data to be sent to the server
@@ -53,11 +53,11 @@ func (c Client)SetVolumesRead(id int, volumes int) (serverResponse, error) {
   params.Set("num_volumes_read", strconv.Itoa(volumes))
 
   // make API request
-  return c.putRequestHandler(endpoint, params), nil
+  return c.putRequestHandler(endpoint, params)
 }
 
 // update just a manga's num of chapters read
-func (c Client)SetChaptersRead(id int, chapters int) (serverResponse, error) {
+func (c Client)SetChaptersRead(id int, chapters int) (UpdateResponse, error) {
   endpoint := endpointGenerator(id)
 
   // data to be sent to the server
@@ -65,11 +65,11 @@ func (c Client)SetChaptersRead(id int, chapters int) (serverResponse, error) {
   params.Set("num_chapters_read", strconv.Itoa(chapters))
 
   // make API request
-  return c.putRequestHandler(endpoint, params), nil
+  return c.putRequestHandler(endpoint, params)
 }
 
 // update just a manga's rereading status
-func (c Client)SetIsRereading(id int, isRereading bool) (serverResponse, error) {
+func (c Client)SetIsRereading(id int, isRereading bool) (UpdateResponse, error) {
   endpoint := endpointGenerator(id)
 
   // data to be sent to the server
@@ -77,16 +77,16 @@ func (c Client)SetIsRereading(id int, isRereading bool) (serverResponse, error) 
   params.Set("is_rereading", strconv.FormatBool(isRereading))
 
   // make API request
-  return c.putRequestHandler(endpoint, params), nil
+  return c.putRequestHandler(endpoint, params)
 }
 
 // update just the manga's score
-func (c Client)SetScore(id int, score int) (serverResponse, error) {
+func (c Client)SetScore(id int, score int) (UpdateResponse, error) {
   endpoint := endpointGenerator(id)
 
   // checks if specified score is valid
   if !e.IsValidScore(score) {
-    return serverResponse{}, e.InvalidScoreError
+    return UpdateResponse{}, e.InvalidScoreError
   }
 
   // data to be sent to the server
@@ -94,16 +94,16 @@ func (c Client)SetScore(id int, score int) (serverResponse, error) {
   params.Set("score", strconv.Itoa(score))
 
   // make API request
-  return c.putRequestHandler(endpoint, params), nil
+  return c.putRequestHandler(endpoint, params)
 }
 
 // update just a manga's priority
-func (c Client)SetPriority(id int, priority int) (serverResponse, error) {
+func (c Client)SetPriority(id int, priority int) (UpdateResponse, error) {
   endpoint := endpointGenerator(id)
 
   // checks if specified priority is valid
   if !e.IsValidPriority(priority) {
-    return serverResponse{}, e.InvalidPriorityError
+    return UpdateResponse{}, e.InvalidPriorityError
   }
 
   // data to be sent to the server
@@ -111,16 +111,16 @@ func (c Client)SetPriority(id int, priority int) (serverResponse, error) {
   params.Set("priority", strconv.Itoa(priority))
 
   // make API request
-  return c.putRequestHandler(endpoint, params), nil
+  return c.putRequestHandler(endpoint, params)
 }
 
 // update just a manga's reread value
-func (c Client)SetRereadValue(id int, rereadValue int) (serverResponse, error) {
+func (c Client)SetRereadValue(id int, rereadValue int) (UpdateResponse, error) {
   endpoint := endpointGenerator(id)
 
   // checks if specified reread value is valid
   if !e.IsValidRewatchValue(rereadValue) {
-    return serverResponse{}, e.InvalidRereadValueError
+    return UpdateResponse{}, e.InvalidRereadValueError
   }
 
   // data to be sent to the server
@@ -128,11 +128,11 @@ func (c Client)SetRereadValue(id int, rereadValue int) (serverResponse, error) {
   params.Set("reread_value", strconv.Itoa(rereadValue))
 
   // make API request
-  return c.putRequestHandler(endpoint, params), nil
+  return c.putRequestHandler(endpoint, params)
 }
 
 // update just a manga's reread count
-func (c Client)SetRereadCount(id int, rereadCount int) (serverResponse, error) {
+func (c Client)SetRereadCount(id int, rereadCount int) (UpdateResponse, error) {
   endpoint := endpointGenerator(id)
 
   // data to be sent to the server
@@ -140,11 +140,11 @@ func (c Client)SetRereadCount(id int, rereadCount int) (serverResponse, error) {
   params.Set("num_times_reread", strconv.Itoa(rereadCount))
 
   // make API request
-  return c.putRequestHandler(endpoint, params), nil
+  return c.putRequestHandler(endpoint, params)
 }
 
 // update just a manga's tags
-func (c Client)UpdateTags(id int, tags string) (serverResponse, error) {
+func (c Client)UpdateTags(id int, tags string) (UpdateResponse, error) {
   endpoint := endpointGenerator(id)
 
   // data to be sent to the server
@@ -152,11 +152,11 @@ func (c Client)UpdateTags(id int, tags string) (serverResponse, error) {
   params.Set("tags", tags)
 
   // make API request
-  return c.putRequestHandler(endpoint, params), nil
+  return c.putRequestHandler(endpoint, params)
 }
 
 // update just a manga's comments
-func (c Client)UpdateComments(id int, comments string) (serverResponse, error) {
+func (c Client)UpdateComments(id int, comments string) (UpdateResponse, error) {
   endpoint := endpointGenerator(id)
 
   // data to be sent to the server
@@ -164,34 +164,34 @@ func (c Client)UpdateComments(id int, comments string) (serverResponse, error) {
   params.Set("comments", comments)
 
   // make API request
-  return c.putRequestHandler(endpoint, params), nil
+  return c.putRequestHandler(endpoint, params)
 }
 
 /* NOTE: This will overwrite everything
  * i won't use it.. but it's pretty flexible
  * so this will stay here */
 // Update/Add a manga to user's manga list
-func (c Client)UpdateManga(id int, data UpdateMangaData) (serverResponse, error) {
+func (c Client)UpdateManga(id int, data UpdateMangaData) (UpdateResponse, error) {
   endpoint := endpointGenerator(id)
 
   // checks if specified list status is valid
   if !e.IsValidMangaListStatus(data.Status) {
-    return serverResponse{}, e.InvalidStatusError
+    return UpdateResponse{}, e.InvalidStatusError
   }
 
   // checks if specified score is valid
   if !e.IsValidScore(data.Score) {
-    return serverResponse{}, e.InvalidScoreError
+    return UpdateResponse{}, e.InvalidScoreError
   }
 
   // checks if specified priority is valid
   if !e.IsValidPriority(data.Priority) {
-    return serverResponse{}, e.InvalidPriorityError
+    return UpdateResponse{}, e.InvalidPriorityError
   }
 
   // checks if specified reread value is valid
   if !e.IsValidRewatchValue(data.RereadValue) {
-    return serverResponse{}, e.InvalidRereadValueError
+    return UpdateResponse{}, e.InvalidRereadValueError
   }
 
   params := url.Values{}
@@ -209,6 +209,6 @@ func (c Client)UpdateManga(id int, data UpdateMangaData) (serverResponse, error)
   params.Set("comments",          data.Comments)
 
   // make API request
-  return c.putRequestHandler(endpoint, params), nil
+  return c.putRequestHandler(endpoint, params)
 }
 

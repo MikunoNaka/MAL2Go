@@ -20,12 +20,15 @@ import (
   "github.com/MikunoNaka/MAL2Go/anime"
 )
 
-type AnimeListRaw struct {
+type animeListRaw struct {
   Data []struct {
     Anime      anime.Anime      `json:"node"`
     ListStatus anime.ListStatus `json:"list_status"`
-  }  `json:"data"`
-  Paging anime.ListPaging `json:"paging"`
+  } `json:"data"`
+  Paging struct {
+    NextPage string `json:"next"`
+    PrevPage string `json:"previous"`
+  } `json:"paging"`
 }
 
 type UpdateAnimeData struct {
@@ -35,7 +38,6 @@ type UpdateAnimeData struct {
   EpWatched      int
   Priority       int
   TimesRewatched int
-  // NOTE: idk what RewatchValue is
   RewatchValue   int
   Tags           string
   Comments       string
