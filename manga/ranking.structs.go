@@ -30,12 +30,4 @@ type RawRanking struct {
       Rank int `json:"rank"`
     } `json:"ranking"`
   } `json:"data"`
-
-  Paging ListPaging `json:"paging"`
-}
-
-// this is how mal2go returns data
-type MangaRanking struct {
-  Mangas []rManga
-  Paging ListPaging
 }

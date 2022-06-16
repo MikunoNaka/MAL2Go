@@ -17,23 +17,20 @@
 package manga
 
 import (
-	"encoding/json"
-	"strconv"
+  "encoding/json"
+  "strconv"
   e "github.com/MikunoNaka/MAL2Go/errhandlers"
   u "github.com/MikunoNaka/MAL2Go/util"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2/manga"
 
-// MAL Might change this
-const maxMangaLimit int = 500
-
 // in MAL documentation this is named Get Manga List
-func (c Client) SearchManga(searchString string, limit, offset int, fields []string) (MangaSearch, error) {
-  var searchResults MangaSearch
+func (c Client) SearchManga(searchString string, limit, offset int, fields []string) ([]Manga, error) {
+  var searchResults []Manga
 
   // error handling for limit
-  limitErr := e.LimitErrHandler(limit, maxMangaLimit)
+  limitErr := e.LimitErrHandler(limit, 100)
   if limitErr != nil {
     return searchResults, limitErr
   }
@@ -57,17 +54,9 @@ func (c Client) SearchManga(searchString string, limit, offset int, fields []str
   data := c.requestHandler(endpoint)
   json.Unmarshal([]byte(data), &mangaSearchData)
 
-  // Adding all the mangas to another list to get formatted results later
-  var mangas []Manga
-  for _, element := range mangaSearchData.Data { 
-    mangas = append(mangas, element.Manga) 
+  for _, element := range mangaSearchData.Data {
+    searchResults = append(searchResults, element.Manga)
   } 
-
-  // finally generate AnimeList 
-  searchResults = MangaSearch {
-    Mangas: mangas,
-    Paging: mangaSearchData.Paging,
-  }
 
   return searchResults, nil
 }
@@ -96,11 +85,11 @@ func (c Client) GetMangaById(mangaId int, fields []string) (Manga, error) {
 }
 
 // Ranking is a list of manga sorted by their rank
-func (c Client) GetMangaRanking(rankingType string, limit, offset int, fields []string) (MangaRanking, error) {
-  var mangaRanking MangaRanking
+func (c Client) GetMangaRanking(rankingType string, limit, offset int, fields []string) ([]rManga, error) {
+  var mangaRanking []rManga
 
   // error handling for limit
-  limitErr := e.LimitErrHandler(limit, maxMangaLimit)
+  limitErr := e.LimitErrHandler(limit, 500)
   if limitErr != nil {
     return mangaRanking, limitErr
   }
@@ -129,24 +118,13 @@ func (c Client) GetMangaRanking(rankingType string, limit, offset int, fields []
   json.Unmarshal([]byte(data), &rankingData)
 
   // Adding all the mangas in ranking list to a slice
-  var mangas []rManga
-
   for _, manga := range rankingData.Data {
     // set RankNum for manga
-    newManga := manga.Manga
-    newManga.RankNum = manga.Ranking.Rank
+    m := manga.Manga
+    m.RankNum = manga.Ranking.Rank
 
     // add newManga to list
-    mangas = append(mangas, newManga)
-  }
-
-  // Finally, create the AnimeRanking object
-  mangaRanking = MangaRanking {
-    Mangas: mangas,
-    Paging: ListPaging {
-      NextPage: rankingData.Paging.NextPage,
-      PrevPage: rankingData.Paging.PrevPage,
-    },
+    mangaRanking = append(mangaRanking, m)
   }
 
   return mangaRanking, nil

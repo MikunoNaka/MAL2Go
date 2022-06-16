@@ -21,12 +21,4 @@ type MangaSearchRaw struct {
   Data []struct {
     Manga Manga `json:"node"`
   } `json:"data"`
-
-  Paging ListPaging `json:"paging"`
-}
-
-// this is how mal2go returns data
-type MangaSearch struct {
-  Mangas []Manga
-  Paging ListPaging
 }

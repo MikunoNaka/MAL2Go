@@ -20,8 +20,6 @@ import (
   "github.com/MikunoNaka/MAL2Go/util"
 )
 
-type ListPaging util.ListPaging
-
 type Author struct {
   // TODO: add stuff
 }
