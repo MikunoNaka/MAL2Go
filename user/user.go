@@ -18,7 +18,6 @@ package user
 
 import (
   "encoding/json"
-  "errors"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2/users"
