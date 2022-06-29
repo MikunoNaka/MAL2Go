@@ -17,7 +17,7 @@
 package manga
 
 import (
-  "github.com/MikunoNaka/MAL2Go/util"
+  "github.com/MikunoNaka/MAL2Go/v2/util"
 )
 
 type Author struct {

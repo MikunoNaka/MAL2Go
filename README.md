@@ -5,11 +5,11 @@ MyAnimeList V2 API wrapper for GoLang
 MAL2Go is divided into multiple packages. Each package needs to be installed manually.
 In a terminal, run
 ``` fish
-go get github.com/MikunoNaka/MAL2Go/anime
-go get github.com/MikunoNaka/MAL2Go/manga
-go get github.com/MikunoNaka/MAL2Go/user
-go get github.com/MikunoNaka/MAL2Go/user/anime
-go get github.com/MikunoNaka/MAL2Go/user/manga
+go get github.com/MikunoNaka/MAL2Go/v2/anime
+go get github.com/MikunoNaka/MAL2Go/v2/manga
+go get github.com/MikunoNaka/MAL2Go/v2/user
+go get github.com/MikunoNaka/MAL2Go/v2/user/anime
+go get github.com/MikunoNaka/MAL2Go/v2/user/manga
 ```
 To install the packages you'd usually need. To find out more about what each package does, refer to [Package Structure](#Package-Structure)
 

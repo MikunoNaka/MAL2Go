@@ -17,7 +17,7 @@
 package manga
 
 import (
-  "github.com/MikunoNaka/MAL2Go/manga"
+  "github.com/MikunoNaka/MAL2Go/v2/manga"
 )
 
 type mangaListRaw struct {
