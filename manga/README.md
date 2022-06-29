@@ -6,14 +6,14 @@ To *update* manga status (score, status, etc) refer to [`user/manga`](../user/ma
 ## Installation
 In a terminal, run
 ``` fish
-go get "github.com/MikunoNaka/MAL2Go/manga"
+go get "github.com/MikunoNaka/MAL2Go/v2/manga"
 ```
 
 ## Usage
 Firstly, import this package and instanciate the client.
 ``` go
 import (
-  "github.com/MikunoNaka/MAL2Go/manga"
+  "github.com/MikunoNaka/MAL2Go/v2/manga"
 )
 ```
 

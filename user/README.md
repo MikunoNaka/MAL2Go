@@ -5,7 +5,7 @@ MAL2Go `user` package has functionality related to getting data about the authen
 Firstly, import this package and instanciate the client.
 ``` go
 import (
-  "github.com/MikunoNaka/MAL2Go/user"
+  "github.com/MikunoNaka/MAL2Go/v2/user"
 )
 ```
 

@@ -8,14 +8,14 @@ To *get* anime data, refer to the [`manga`](../../manga) package.
 ## Installation
 In a terminal, run
 ``` fish
-go get "github.com/MikunoNaka/MAL2Go/user/manga"
+go get "github.com/MikunoNaka/MAL2Go/v2/user/manga"
 ```
 
 ## Usage
 Firstly, import this package and instanciate the client.
 ``` go
 import (
-  "github.com/MikunoNaka/MAL2Go/user/manga"
+  "github.com/MikunoNaka/MAL2Go/v2/user/manga"
 )
 ```
 
