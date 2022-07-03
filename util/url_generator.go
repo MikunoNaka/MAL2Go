@@ -18,6 +18,7 @@ package util
 
 import (
   "errors"
+  "net/url"
 )
 
 var URLNameValueError error = errors.New("URLNameValueError: Number of names and values passed to URLGenerator don't match.")
@@ -44,9 +45,9 @@ func UrlGenerator(baseUrl string, names []string, values [][]string, isPrimary b
     // add values to data variable
     for i, j := range values[index] {
       if i > 0 {
-        data = data + "," + j
+        data = data + "," + url.QueryEscape(j)
       } else {
-        data = data + j 
+        data = data + url.QueryEscape(j)
       }
     }
 
