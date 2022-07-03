@@ -17,7 +17,7 @@
 package user
 
 import (
-  "github.com/MikunoNaka/MAL2Go/v2/util"
+  "github.com/MikunoNaka/MAL2Go/v3/util"
 )
 
 type Client util.DefaultClient

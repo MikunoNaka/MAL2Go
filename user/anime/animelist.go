@@ -20,9 +20,9 @@ import (
   "encoding/json"
   "strconv"
   "fmt"
-  a "github.com/MikunoNaka/MAL2Go/v2/anime"
-  e "github.com/MikunoNaka/MAL2Go/v2/errhandlers"
-  u "github.com/MikunoNaka/MAL2Go/v2/util"
+  a "github.com/MikunoNaka/MAL2Go/v3/anime"
+  e "github.com/MikunoNaka/MAL2Go/v3/errhandlers"
+  u "github.com/MikunoNaka/MAL2Go/v3/util"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2"

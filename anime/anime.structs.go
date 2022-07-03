@@ -17,7 +17,7 @@
 package anime
 
 import (
-  u "github.com/MikunoNaka/MAL2Go/v2/util"
+  u "github.com/MikunoNaka/MAL2Go/v3/util"
 )
 
 type AnimeStatistics struct {

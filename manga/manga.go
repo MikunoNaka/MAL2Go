@@ -19,14 +19,14 @@ package manga
 import (
   "encoding/json"
   "strconv"
-  e "github.com/MikunoNaka/MAL2Go/v2/errhandlers"
-  u "github.com/MikunoNaka/MAL2Go/v2/util"
+  e "github.com/MikunoNaka/MAL2Go/v3/errhandlers"
+  u "github.com/MikunoNaka/MAL2Go/v3/util"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2/manga"
 
 // in MAL documentation this is named Get Manga List
-func (c Client) SearchManga(searchString string, limit, offset int, fields []string) ([]Manga, error) {
+func (c Client) SearchManga(searchString string, limit, offset int, nsfw bool, fields []string) ([]Manga, error) {
   var searchResults []Manga
 
   // error handling for limit
@@ -44,8 +44,8 @@ func (c Client) SearchManga(searchString string, limit, offset int, fields []str
   // generate endpoint url with custom params
   endpoint, _ := u.UrlGenerator(
     BASE_URL,
-    []string{"q", "limit", "offset", "fields"},
-    [][]string{{searchString}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+    []string{"q", "limit", "offset", "fields", "nsfw"},
+    [][]string{{searchString}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields, {strconv.FormatBool(nsfw)}},
     true,
   )
 
@@ -91,7 +91,7 @@ func (c Client) GetMangaById(mangaId int, fields []string) (Manga, error) {
 }
 
 // Ranking is a list of manga sorted by their rank
-func (c Client) GetMangaRanking(rankingType string, limit, offset int, fields []string) ([]rManga, error) {
+func (c Client) GetMangaRanking(rankingType string, limit, offset int, nsfw bool, fields []string) ([]rManga, error) {
   var mangaRanking []rManga
 
   // error handling for limit
@@ -113,8 +113,8 @@ func (c Client) GetMangaRanking(rankingType string, limit, offset int, fields []
 
   endpoint, _ := u.UrlGenerator(
     BASE_URL + "/ranking",
-    []string{"ranking_type", "limit", "offset", "fields"},
-    [][]string{{rankingType}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+    []string{"ranking_type", "limit", "offset", "fields", "nsfw"},
+    [][]string{{rankingType}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields, {strconv.FormatBool(nsfw)}},
     true,
   )
 

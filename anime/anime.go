@@ -20,14 +20,14 @@ import (
   "encoding/json"
   "fmt"
   "strconv"
-  e "github.com/MikunoNaka/MAL2Go/v2/errhandlers"
-  u "github.com/MikunoNaka/MAL2Go/v2/util"
+  e "github.com/MikunoNaka/MAL2Go/v3/errhandlers"
+  u "github.com/MikunoNaka/MAL2Go/v3/util"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2/anime"
 
 // in MAL documentation this is named Get Anime List
-func (c Client) SearchAnime(searchString string, limit, offset int, fields []string) ([]Anime, error) {
+func (c Client) SearchAnime(searchString string, limit, offset int, nsfw bool, fields []string) ([]Anime, error) {
   var searchResults []Anime
 
   // error handling for limit
@@ -45,8 +45,8 @@ func (c Client) SearchAnime(searchString string, limit, offset int, fields []str
   // generate endpoint url with custom params
   endpoint, _ := u.UrlGenerator(
     BASE_URL,
-    []string{"q", "limit", "offset", "fields"},
-    [][]string{{searchString}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+    []string{"q", "limit", "offset", "fields", "nsfw"},
+    [][]string{{searchString}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields, {strconv.FormatBool(nsfw)}},
     true,
   )
 
@@ -95,7 +95,7 @@ func (c Client) GetAnimeById(animeId int, fields []string) (Anime, error) {
 }
 
 // Ranking is a list of anime sorted by their rank
-func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []string) ([]rAnime, error) {
+func (c Client) GetAnimeRanking(rankingType string, limit, offset int, nsfw bool, fields []string) ([]rAnime, error) {
   var animeRanking []rAnime
 
   // error handling for limit
@@ -117,8 +117,8 @@ func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []
 
   endpoint, _ := u.UrlGenerator(
     BASE_URL + "/ranking",
-    []string{"ranking_type", "limit", "offset", "fields"},
-    [][]string{{rankingType}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+    []string{"ranking_type", "limit", "offset", "fields", "nsfw"},
+    [][]string{{rankingType}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields, {strconv.FormatBool(nsfw)}},
     true,
   )
 
@@ -143,7 +143,7 @@ func (c Client) GetAnimeRanking(rankingType string, limit, offset int, fields []
 }
 
 // get list of animes from specified season
-func (c Client) GetSeasonalAnime(year, season, sort string, limit, offset int, fields []string) (SeasonalAnime, error) {
+func (c Client) GetSeasonalAnime(year, season, sort string, limit, offset int, nsfw bool, fields []string) (SeasonalAnime, error) {
   var seasonalAnime SeasonalAnime
 
   // error handling for limit
@@ -170,8 +170,8 @@ func (c Client) GetSeasonalAnime(year, season, sort string, limit, offset int, f
 
   endpoint, _ := u.UrlGenerator(
     BASE_URL + fmt.Sprintf("/season/%s/%s", year, season),
-    []string{"sort", "limit", "offset", "fields"},
-    [][]string{{sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+    []string{"sort", "limit", "offset", "fields", "nsfw"},
+    [][]string{{sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields, {strconv.FormatBool(nsfw)}},
     true,
   )
 
@@ -199,7 +199,7 @@ func (c Client) GetSeasonalAnime(year, season, sort string, limit, offset int, f
 }
 
 // get anime suggestions for the user
-func (c Client) GetSuggestedAnime(limit, offset int, fields []string) ([]Anime, error){
+func (c Client) GetSuggestedAnime(limit, offset int, nsfw bool, fields []string) ([]Anime, error){
   var suggestedAnime []Anime
 
   // error handling for limit
@@ -217,8 +217,8 @@ func (c Client) GetSuggestedAnime(limit, offset int, fields []string) ([]Anime, 
 
   endpoint, _ := u.UrlGenerator(
     BASE_URL + "/suggestions",
-    []string{"limit", "offset", "fields"},
-    [][]string{{strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+    []string{"limit", "offset", "fields", "nsfw"},
+    [][]string{{strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields, {strconv.FormatBool(nsfw)}},
     true,
   )
 
