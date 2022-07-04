@@ -18,10 +18,39 @@ package manga
 
 import (
   "github.com/MikunoNaka/MAL2Go/v3/util"
+  a "github.com/MikunoNaka/MAL2Go/v3/anime"
 )
 
+type Magazine struct {
+  Id   int    `json:"id"`
+  Name string `json:"name"`
+}
+
+type MangaSerialization struct {
+  Magazine Magazine `json:"node"`
+  Role     string   `json:"role"`
+}
+
+type Recommendation struct {
+  Manga Manga `json:"node"`
+  Num   int   `json:"num_recommendations"`
+}
+
 type Author struct {
-  // TODO: add stuff
+  Id        int    `json:"id"`
+  FirstName string `json:"first_name"`
+  LastName  string `json:"last_name"`
+}
+
+type MangaAuthor struct {
+  Author
+  Role string `json:"role"`
+}
+
+type Related struct {
+  Manga                 Manga  `json:"node"`
+  RelationType          string `json:"relation_type"`
+  RelationTypeFormatted string `json:"relation_type_formatted"`
 }
 
 type ListStatus struct {
@@ -43,32 +72,35 @@ type ListStatus struct {
 }
 
 type Manga struct {
-  Id            int            `json:"id"`
-  Title         string         `json:"title"`
-  MainPicture   util.Picture   `json:"main_picture"`
-  AltTitles     util.AltTitles `json:"alternative_titles"`
-  StartDate     string         `json:"start_date"`
-  EndDate       string         `json:"end_date"`
-  Synopsis      string         `json:"synopsis"`
-  MeanScore     float32        `json:"mean"`
-  Rank          int            `json:"rank"`
-  Popularity    int            `json:"popularity"` 
-  NumListUsers  int            `json:"num_list_users"`
-  NsfwStatus    string         `json:"nsfw"`
-  Genres        []util.Genre   `json:"genres"`
-  CreatedAt     string         `json:"created_at"`
-  UpdatedAt     string         `json:"updated_at"`
-  MediaType     string         `json:"media_type"`
-  Status        string         `json:"status"`
+  Id              int                  `json:"id"`
+  Title           string               `json:"title"`
+  MainPicture     util.Picture         `json:"main_picture"`
+  AltTitles       util.AltTitles       `json:"alternative_titles"`
+  StartDate       string               `json:"start_date"`
+  EndDate         string               `json:"end_date"`
+  Synopsis        string               `json:"synopsis"`
+  MeanScore       float32              `json:"mean"`
+  Rank            int                  `json:"rank"`
+  Popularity      int                  `json:"popularity"`
+  NumListUsers    int                  `json:"num_list_users"`
+  NsfwStatus      string               `json:"nsfw"`
+  Genres          []util.Genre         `json:"genres"`
+  CreatedAt       string               `json:"created_at"`
+  UpdatedAt       string               `json:"updated_at"`
+  MediaType       string               `json:"media_type"`
+  Status          string               `json:"status"`
   /* MyListStatus refers to the authenticated user's info
    * while ListStatus can be used for other users */
-  MyListStatus  ListStatus     `json:"my_list_status"`
-  ListStatus    ListStatus     `json:"list_status"`
-  NumVolumes    int            `json:"num_volumes"`
-  NumChapters   int            `json:"num_chapters"`
-  Authors       []Author       `json:"authors"`
-  Pictures      []util.Picture `json:"pictures"`
-  Background    string         `json:"background"`
-  /* TODO add these fields:
-   * related_anime, related_manga, recommendations, serialization */
+  MyListStatus    ListStatus           `json:"my_list_status"`
+  ListStatus      ListStatus           `json:"list_status"`
+  NumVolumes      int                  `json:"num_volumes"`
+  NumChapters     int                  `json:"num_chapters"`
+  Authors         []MangaAuthor        `json:"authors"`
+  Pictures        []util.Picture       `json:"pictures"`
+  Background      string               `json:"background"`
+  // NOTE: RelatedAnime doesn't seem to work, not sure if that's the API's fault
+  RelatedAnime    []a.Related          `json:"related_anime"`
+  RelatedManga    []Related            `json:"related_manga"`
+  Recommendations []Recommendation     `json:"recommendations"`
+  Serialization   []MangaSerialization `json:"serialization"`
 }
