@@ -17,7 +17,7 @@
 package anime
 
 import (
-  "github.com/MikunoNaka/MAL2Go/v3/anime"
+  "github.com/MikunoNaka/MAL2Go/v4/anime"
 )
 
 type animeListRaw struct {

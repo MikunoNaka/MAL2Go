@@ -19,8 +19,8 @@ package manga
 import (
   "encoding/json"
   "strconv"
-  e "github.com/MikunoNaka/MAL2Go/v3/errhandlers"
-  u "github.com/MikunoNaka/MAL2Go/v3/util"
+  e "github.com/MikunoNaka/MAL2Go/v4/errhandlers"
+  u "github.com/MikunoNaka/MAL2Go/v4/util"
 )
 
 const BASE_URL string = "https://api.myanimelist.net/v2/manga"

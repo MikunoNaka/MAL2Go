@@ -20,7 +20,7 @@ import (
   "io/ioutil"
   "log"
   "net/http"
-  "github.com/MikunoNaka/MAL2Go/v3/util"
+  "github.com/MikunoNaka/MAL2Go/v4/util"
   "errors"
   "encoding/json"
 )

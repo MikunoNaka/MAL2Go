@@ -21,7 +21,7 @@ import (
   "log"
   "net/http"
   "encoding/json"
-  "github.com/MikunoNaka/MAL2Go/v3/util"
+  "github.com/MikunoNaka/MAL2Go/v4/util"
   "errors"
 )
 

@@ -17,7 +17,7 @@
 package errhandlers
 
 import (
-  "github.com/MikunoNaka/MAL2Go/v3/util"
+  "github.com/MikunoNaka/MAL2Go/v4/util"
 )
 
 // this is only for anime fields

@@ -17,8 +17,8 @@
 package manga
 
 import (
-  "github.com/MikunoNaka/MAL2Go/v3/util"
-  a "github.com/MikunoNaka/MAL2Go/v3/anime"
+  "github.com/MikunoNaka/MAL2Go/v4/util"
+  a "github.com/MikunoNaka/MAL2Go/v4/anime"
 )
 
 type Magazine struct {
