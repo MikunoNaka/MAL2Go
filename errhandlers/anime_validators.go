@@ -56,7 +56,6 @@ func IsValidField(field string) bool {
       "status",
       "genres",
       "my_list_status",
-      "list_status",
       "num_episodes",
       "start_season",
       "broadcast",
