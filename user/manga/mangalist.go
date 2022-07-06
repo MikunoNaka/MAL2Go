@@ -47,7 +47,7 @@ func (c Client) GetMangaList(user, status, sort string, limit, offset int, nsfw 
   }
 
   // handle all the errors for the fields
-  fields, err := e.FieldsErrHandler(fields)
+  fields, err := e.MangaFieldsErrHandler(fields)
   if err != nil {
     return userMangaList, false, err
   }
