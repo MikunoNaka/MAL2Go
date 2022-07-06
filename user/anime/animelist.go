@@ -38,7 +38,7 @@ func (c Client)DeleteAnime(id int) (string, error) {
 
 // Get authenticated user's anime list
 // returns true as second value if there are more animes present
-func (c Client) GetAnimeList(user, status, sort string, limit, offset int, fields []string) ([]a.Anime, bool, error){
+func (c Client) GetAnimeList(user, status, sort string, limit, offset int, nsfw bool, fields []string) ([]a.Anime, bool, error){
   var userAnimeList []a.Anime
   // error handling for limit
   limitErr := e.LimitErrHandler(limit, maxListLimit)
@@ -75,16 +75,16 @@ func (c Client) GetAnimeList(user, status, sort string, limit, offset int, field
   if status == "" {
     endpoint, _ = u.UrlGenerator(
       BASE_URL + "/users/" + user + "/animelist",
-      []string{"sort", "limit", "offset", "fields"},
-      [][]string{{sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+      []string{"sort", "limit", "offset", "fields", "nsfw"},
+      [][]string{{sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields, {strconv.FormatBool(nsfw)}},
       true,
     )
   } else {
     // status gets included if specified
     endpoint, _ = u.UrlGenerator(
       BASE_URL + "/users/" + user + "/animelist",
-      []string{"status", "sort", "limit", "offset", "fields"},
-      [][]string{{status}, {sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+      []string{"status", "sort", "limit", "offset", "fields", "nsfw"},
+      [][]string{{status}, {sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields, {strconv.FormatBool(nsfw)}},
       true,
     )
   }

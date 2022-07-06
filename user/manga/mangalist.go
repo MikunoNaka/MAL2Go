@@ -38,7 +38,7 @@ func (c Client)DeleteManga(id int) (string, error) {
 
 // Get authenticated user's manga list
 // returns true as second value if there are more mangas present
-func (c Client) GetMangaList(user, status, sort string, limit, offset int, fields []string) ([]m.Manga, bool, error){
+func (c Client) GetMangaList(user, status, sort string, limit, offset int, nsfw bool, fields []string) ([]m.Manga, bool, error){
   var userMangaList []m.Manga
   // error handling for limit
   limitErr := e.LimitErrHandler(limit, maxListLimit)
@@ -75,16 +75,16 @@ func (c Client) GetMangaList(user, status, sort string, limit, offset int, field
   if status == "" {
     endpoint, _ = u.UrlGenerator(
       BASE_URL + "/users/" + user + "/mangalist",
-      []string{"sort", "limit", "offset", "fields"},
-      [][]string{{sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+      []string{"sort", "limit", "offset", "fields", "nsfw"},
+      [][]string{{sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields, {strconv.FormatBool(nsfw)}},
       true,
     )
   } else {
     // status gets included if specified
     endpoint, _ = u.UrlGenerator(
       BASE_URL + "/users/" + user + "/mangalist",
-      []string{"status", "sort", "limit", "offset", "fields"},
-      [][]string{{status}, {sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields},
+      []string{"status", "sort", "limit", "offset", "fields", "nsfw"},
+      [][]string{{status}, {sort}, {strconv.Itoa(limit)}, {strconv.Itoa(offset)}, fields, {strconv.FormatBool(nsfw)}},
       true,
     )
   }
