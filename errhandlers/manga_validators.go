@@ -39,6 +39,7 @@ func IsValidMangaField(field string) bool {
       "status",
       "genres",
       "my_list_status",
+      "list_status",
       "num_volumes",
       "num_chapters",
       "authors",
